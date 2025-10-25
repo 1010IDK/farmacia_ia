@@ -1,0 +1,22 @@
+.bg-gradient-primary {
+  background-color: #1b3c53;
+  background-image: none;
+}
+.sidebar-dark .nav-item.active .nav-link i {
+  color: none;
+}
+.sidebar-dark .nav-item.active .nav-link {
+  color: none;
+}
+.btn-primary {
+  background-color: #1b3c53;
+}
+.btn-warning {
+  background-color: #1b3c53;
+  border-color: transparent;
+}
+.input-animado:focus {
+  border-color: blue;
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+  transition: all 0.3s ease-in-out;
+}

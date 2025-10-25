@@ -1,0 +1,192 @@
+/* Variables de color para mantener consistencia */
+:root {
+  --azul-primario: #517d9b;
+  --azul-oscuro: #022338;
+  --blanco: #d4d3d2;
+}
+
+/* Estilo general del cuerpo de la página */
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f5f9fc;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: linear-gradient(135deg, #f5f9fc 0%, #e0f0fa 100%);
+}
+
+/* Contenedor principal que agrupa logo y formularios */
+.container {
+  display: flex;
+  max-width: 900px;
+  width: 100%;
+  background-color: var(--blanco);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Sección del logo con fondo degradado */
+.logo-section {
+  background: linear-gradient(
+    to bottom right,
+    var(--azul-primario),
+    var(--azul-oscuro)
+  );
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: var(--blanco);
+  text-align: center;
+}
+
+/* Espacio reservado para el logo */
+.logo-placeholder {
+  width: 120px;
+  height: 120px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Sección del formulario (login y registro) */
+.form-section {
+  width: 60%;
+  padding: 40px;
+}
+
+/* Contenedor interno de los formularios */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Pestaña login */
+.form-tabs {
+  display: flex;
+  justify-content: center; /* Centra la pestaña horizontalmente */
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #777;
+}
+
+.tab.active {
+  color: var(--azul-oscuro);
+  border-bottom: 2px solid var(--azul-oscuro);
+}
+
+/* Contenido del formulario */
+.form-content {
+  flex-grow: 1;
+}
+
+/* Oculta formularios por defecto */
+.form {
+  display: none;
+}
+
+/* Muestra el formulario activo */
+.form.active {
+  display: block;
+}
+
+/* Títulos de sección */
+h2 {
+  color: var(--azul-oscuro);
+  margin-bottom: 20px;
+}
+
+/*  Grupo de entrada (label + input) */
+.input-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--azul-primario);
+  box-shadow: 0 0 0 2px rgba(88, 171, 255, 0.2);
+}
+
+/*  Botón de acción */
+button {
+  background-color: #1b3c53;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--azul-oscuro);
+}
+
+/* Enlace para recuperar contraseña */
+.forgot-password {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.forgot-password a {
+  color: var(--azul-primario);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Diseño responsivo para móviles */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .logo-section,
+  .form-section {
+    width: 100%;
+  }
+
+  .logo-section {
+    padding: 20px;
+  }
+}
