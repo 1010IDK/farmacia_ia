@@ -8,6 +8,7 @@
     <meta charset="UTF-8"> <!-- Define la codificación de caracteres como UTF-8 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Hace que el diseño sea responsivo -->
     <title>Farmamigo IV - iniciar sesion y Registro</title> <!-- Título que aparece en la pestaña del navegador -->
+    
     <style>
         /* Variables de color para mantener consistencia */
         :root {
@@ -208,13 +209,15 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="../diseno/css/estilos.css">
+
 </head>
 <body>
     <!-- Contenedor principal -->
     <div class="container">
         <!--  Sección del logo -->
         <div class="logo-section">
-            <a href="../index.html"><div class="logo-placeholder"><img src="../diseno/img/farmamigo.png" alt="Logo Farmamigo IV" alt="Logo de la empresa" style="width: 150px; height: 150px;"></div></a>
+            <a href="../index_t.php"><div class="logo-placeholder"><img src="../diseno/img/farmamigo.png" alt="Logo Farmamigo IV" alt="Logo de la empresa" style="width: 150px; height: 150px;"></div></a>
             <h1>Farmamigo IV</h1>
             <p>Tu farmacia de confianza</p>
         </div>
@@ -243,41 +246,50 @@
                                 <label for="password">Contraseña</label>
                                 <input type="password" name="password" id="password" >
                             </div>
-
-                            <div class="forgot-password">
-                                <a href="#">¿Olvidaste tu contraseña?</a>
-                            </div>
-
                             <button type="submit" name="btningresar" id="btningresar">Iniciar Sesión</button >
                         </form>
                     </div>
                     <!--  Formulario de Registro -->
                     <div id="register-form" class="form">
                         <h2>Crear una cuenta</h2>                            
-                    
+
                         <form method="post" action="../controladores/controlador-registro.php">
                             <div class="input-group">
-                                <label for="register-name">Nombre completo</label>
+                                <label for="register-name">Nombre completo    
+                                <span class="required-tooltip">*
+                                <span class="tooltip-text">Campo obligatorio</span></label>
                                 <input type="text" name="registrar-nombre" id="registrar-nombre">
                             </div>
 
                             <div class="input-group">
-                                <label for="register-email">Correo electrónico</label>
+                                <label for="register-email">Correo electrónico                                
+                                <span class="required-tooltip">*
+                                <span class="tooltip-text">Campo obligatorio</span>
+                                </label>
                                 <input type="email" name="registrar-correo">
                             </div>
 
                             <div class="input-group">
-                                <label for="register-street">Ubicacion de residencia</label>
+                                <label for="register-street">Ubicacion de residencia
+                                <span class="required-tooltip">*
+                                <span class="tooltip-text">Campo obligatorio</span></span>                                
+                                </label>
                                 <input type="text" name="ubicacion" id="ubicacion">
                             </div>
 
                             <div class="input-group">
-                                <label for="register-phone">Teléfono</label>
+                                <label for="register-phone">Teléfono
+                                <span class="required-tooltip">*
+                                <span class="tooltip-text">Campo obligatorio</span></span>    
+                                </label>
                                 <input type="tel" name="registrar-telefono" id="registrar-telefono">
                             </div>
 
                             <div class="input-group">
-                                <label for="register-password">Contraseña</label>
+                                <label for="register-password">Contraseña (6 digitos minimo)
+                                <span class="required-tooltip">*
+                                <span class="tooltip-text">Campo obligatorio, minimo 6 digitos</span></span>                                    
+                                </label>
                                 <input type="password" name="registrar-contrasena" id="registrar-contrasena">
                             </div>
 

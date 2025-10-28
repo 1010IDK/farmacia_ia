@@ -48,13 +48,29 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
               <!-- <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li> -->
-              <li class="nav-item" id="carrito">
-                <button class="btn btn-outline-dark" type="submit">
-                  <i class="bi-cart-fill me-1 text-white"></i>
-                  Cart
-                  <span class="badge text-black ms-1 text-white">0</span>
-              </button>
-              </li>
+             <li class="nav-item" id="carrito">
+    <a href="vistas/carrito.php" class="btn btn-outline-dark">
+        <i class="bi-cart-fill me-1 text-white"></i>
+        Cart
+        <span class="badge text-black ms-1 text-white">
+            <?php
+            // Mostrar contador actual del carrito
+            if (isset($_SESSION['id_usuario'])) {
+                $id_usuario = $_SESSION['id_usuario'];
+                $sql_contador = "SELECT SUM(dc.dc_cantidad) as total 
+                                FROM detalles_carrito dc 
+                                JOIN carrito_compras cc ON dc.id_carrito = cc.id_carrito 
+                                WHERE cc.id_usuario = $id_usuario";
+                $res_contador = mysqli_query($conexion, $sql_contador);
+                $contador = mysqli_fetch_assoc($res_contador);
+                echo $contador['total'] ? $contador['total'] : 0;
+            } else {
+                echo 0;
+            }
+            ?>
+        </span>
+    </a>
+</li>
             </ul>
             <div class="d-flex flex-row-reverse" id="search">
                 <div class="p-2 ">

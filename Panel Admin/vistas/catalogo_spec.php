@@ -71,7 +71,7 @@ if (!$resultado) {
                           Categorias
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="vistas/catalogo.php">Todos los productos</a></li>
+                          <li><a class="dropdown-item" href="catalogo.php">Todos los productos</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="catalogo_spec.php?categoria=1">Comida y bebida</a></li>
                           <li><a class="dropdown-item" href="catalogo_spec.php?categoria=2">Medicina</a></li>

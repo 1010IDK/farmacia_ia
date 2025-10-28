@@ -143,8 +143,6 @@ include("config/conexion.php");
 <!--Productos cartas-->
 <section class="productos_cartas" id="productos_cartas">
   <div class="container px-4 px-lg-5 ">
-    <p class="fs-5 fw-semibold d-inline-block me-1" style="color: #D2C1B6">Hola <?php echo htmlspecialchars($nombre); ?></p>
-    <p class="fs-5 d-inline-block" style="color: #fff">, te puede interesar…</p>
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center ">
           <?php 
           // Consulta para obtener 8 productos aleatorios

@@ -74,13 +74,29 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
               <!-- <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li> -->
-              <li class="nav-item" id="carrito">
-                <button class="btn btn-outline-dark" type="submit">
-                  <i class="bi-cart-fill me-1 text-white"></i>
-                  Cart
-                  <span class="badge text-black ms-1 text-white">0</span>
-              </button>
-              </li>
+             <li class="nav-item" id="carrito">
+    <a href="carrito.php" class="btn btn-outline-dark">
+        <i class="bi-cart-fill me-1 text-white"></i>
+        Cart
+        <span class="badge text-black ms-1 text-white">
+            <?php
+            // Mostrar contador actual del carrito
+            if (isset($_SESSION['id_usuario'])) {
+                $id_usuario = $_SESSION['id_usuario'];
+                $sql_contador = "SELECT SUM(dc.dc_cantidad) as total 
+                                FROM detalles_carrito dc 
+                                JOIN carrito_compras cc ON dc.id_carrito = cc.id_carrito 
+                                WHERE cc.id_usuario = $id_usuario";
+                $res_contador = mysqli_query($conexion, $sql_contador);
+                $contador = mysqli_fetch_assoc($res_contador);
+                echo $contador['total'] ? $contador['total'] : 0;
+            } else {
+                echo 0;
+            }
+            ?>
+        </span>
+    </a>
+</li>
             </ul>
             <div class="d-flex flex-row-reverse" id="search">
                 <div class="p-2 ">
@@ -122,36 +138,58 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
         </div>    
   </nav>
   <!-- Product section-->
+<!-- Product section-->
 <section class="py-5 producto" id="producto">
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
             <div class="col-md-6">
-                                           <?php
-                          // 1. Obtener la ruta de la base de datos
-                            $ruta_db = $producto['imagen'] ?? 'diseno/img/default.png';
-
-                          // 2. Preceder con '../' para salir de la carpeta 'vistas/'
-                            $ruta_final = '../' . $ruta_db;
-
-                          // La ruta resultante será: '../img/prod_68f153025adee.png'
-                          ?>
+                <?php
+                // 1. Obtener la ruta de la base de datos
+                $ruta_db = $producto['imagen'] ?? 'diseno/img/default.png';
+                // 2. Preceder con '../' para salir de la carpeta 'vistas/'
+                $ruta_final = '../' . $ruta_db;
+                ?>
                 <img class="card-img-top mb-5 mb-md-0" src="<?php echo $ruta_final; ?>" alt="Imagen de <?php echo $nombre_producto; ?>" />
             </div>
             <div class="col-md-6">
                 <div class="small mb-1">ID: <?php echo $id_producto; ?></div>
-                <h1 class="display-5 fw-bolder"><?php echo $nombre_producto; ?></h1>
+                <h1 class="display-5 fw-bolder text-white"><?php echo $nombre_producto; ?></h1>
                 <div class="fs-5 mb-5">
-                    <span>Bs.<?php echo $precio; ?></span>
+                    <span class="text-white">Bs.<?php echo $precio; ?></span>
                 </div>
-                <p class="lead"><?php echo $descripcion; ?></p>
-                <form action="add_to_cart.php" method="post">
-                    <input type="hidden" name="product_id" value="<?php echo $id_producto; ?>">
-                    <input class="form-control text-center me-3" id="inputQuantity" name="quantity" type="number" value="1" min="1" style="max-width: 3rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="submit" aria-label="Añadir <?php echo $nombre_producto; ?> al carrito">
+                <p class="lead text-white"><?php echo $descripcion; ?></p>
+                
+                <!-- STOCK Y CANTIDAD -->
+                <div class="mb-3">
+                    <strong class="text-white">Stock disponible: <?php echo $producto['cantidad']; ?></strong>
+                </div>
+                
+                <!-- FORMULARIO PARA AGREGAR AL CARRITO -->
+                <form action="../controladores/agregar_producto_carrito.php" method="post">
+                    <input type="hidden" name="id_producto" value="<?php echo $id_producto; ?>">
+                    <div class="d-flex align-items-center mb-3">
+                        <label class="text-white me-2">Cantidad:</label>
+                        <input class="form-control text-center me-3" name="cantidad" 
+                               type="number" value="1" min="1" max="<?php echo $producto['cantidad']; ?>" 
+                               style="max-width: 5rem" required />
+                    </div>
+                    <button class="btn text-white flex-shrink-0" type="submit" 
+                            style="background-color: #1B3C53; border-color: #D2C1B6;">
                         <i class="bi-cart-fill me-1"></i>
                         Añadir al carrito
                     </button>
                 </form>
+                
+                <!-- MENSAJES DE ALERTA -->
+                <?php if (isset($_GET['success']) && $_GET['success'] == 'true'): ?>
+                    <div class="alert alert-success mt-3" role="alert">
+                        ✅ Producto agregado al carrito correctamente
+                    </div>
+                <?php elseif (isset($_GET['error'])): ?>
+                    <div class="alert alert-danger mt-3" role="alert">
+                        ❌ Error: <?php echo htmlspecialchars($_GET['error']); ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
