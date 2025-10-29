@@ -101,89 +101,88 @@ class Carrito {
 
     // ========== MÉTODOS MODIFICADOS ==========
 
-    async eliminarProducto(e) {
-        const item = e.target.closest('.producto-item');
-        const idDetalle = item.dataset.id;
+async eliminarProducto(e) {
+    const item = e.target.closest('.producto-item');
+    const idDetalle = item.dataset.id;
 
-        if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
-            return;
+    if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('../controladores/eliminar_carrito.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id_detalle_car=${idDetalle}`
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            item.remove();
+            // ACTUALIZAR CONTADOR Y TOTALES
+            this.actualizarContadorNavbar();
+            this.actualizarTotales();
+            this.mostrarMensaje('Producto eliminado del carrito', 'success');
+            
+            if (!document.querySelector('.producto-item')) {
+                location.reload();
+            }
+        } else {
+            this.mostrarMensaje(result.message, 'error');
         }
+    } catch (error) {
+        this.mostrarMensaje('Error al eliminar producto', 'error');
+    }
+}
 
-        try {
-            const response = await fetch('../controladores/eliminar_carrito.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `id_detalle_car=${idDetalle}`
-            });
+async cambiarCantidad(e, cambio) {
+    const item = e.target.closest('.producto-item');
+    const idDetalle = item.dataset.id;
+    const cantidadElement = item.querySelector('.cantidad');
+    let cantidad = parseInt(cantidadElement.textContent);
+    
+    const nuevaCantidad = cantidad + cambio;
 
-            const result = await response.json();
+    if (nuevaCantidad < 1) {
+        this.eliminarProducto(e);
+        return;
+    }
 
-            if (result.success) {
+    try {
+        const response = await fetch('../controladores/actualizar_cantidad_carrito.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id_detalle_car=${idDetalle}&cantidad=${nuevaCantidad}`
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            if (result.eliminado) {
                 item.remove();
-                this.actualizarContadorNavbar();
-                // ACTUALIZAR TOTALES DESPUÉS DE ELIMINAR
-                this.actualizarTotales();
-                this.mostrarMensaje('Producto eliminado del carrito', 'success');
-                
-                // Recargar si el carrito queda vacío
                 if (!document.querySelector('.producto-item')) {
                     location.reload();
                 }
             } else {
-                this.mostrarMensaje(result.message, 'error');
+                cantidadElement.textContent = nuevaCantidad;
+                // ACTUALIZAR CONTADOR Y TOTALES
+                this.actualizarTotales();
             }
-        } catch (error) {
-            this.mostrarMensaje('Error al eliminar producto', 'error');
+            // SIEMPRE ACTUALIZAR CONTADOR
+            this.actualizarContadorNavbar();
+            this.mostrarMensaje('Cantidad actualizada', 'success');
+        } else {
+            this.mostrarMensaje(result.message, 'error');
         }
+    } catch (error) {
+        this.mostrarMensaje('Error al actualizar cantidad', 'error');
     }
-
-    async cambiarCantidad(e, cambio) {
-        const item = e.target.closest('.producto-item');
-        const idDetalle = item.dataset.id;
-        const cantidadElement = item.querySelector('.cantidad');
-        let cantidad = parseInt(cantidadElement.textContent);
-        
-        const nuevaCantidad = cantidad + cambio;
-
-        if (nuevaCantidad < 1) {
-            this.eliminarProducto(e);
-            return;
-        }
-
-        try {
-            const response = await fetch('../controladores/actualizar_cantidad_carrito.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `id_detalle_car=${idDetalle}&cantidad=${nuevaCantidad}`
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                if (result.eliminado) {
-                    item.remove();
-                    if (!document.querySelector('.producto-item')) {
-                        location.reload();
-                    }
-                } else {
-                    cantidadElement.textContent = nuevaCantidad;
-                    // ACTUALIZAR PRECIOS EN TIEMPO REAL
-                    this.actualizarTotales();
-                }
-                this.actualizarContadorNavbar();
-                this.mostrarMensaje('Cantidad actualizada', 'success');
-            } else {
-                this.mostrarMensaje(result.message, 'error');
-            }
-        } catch (error) {
-            this.mostrarMensaje('Error al actualizar cantidad', 'error');
-        }
-    }
-
+}
     async vaciarCarrito() {
         if (!confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
             return;
@@ -212,28 +211,22 @@ class Carrito {
         }
     }
 
-    async actualizarContadorNavbar() {
-        try {
-            const response = await fetch('../controladores/obtener_contador_carrito.php');
-            const result = await response.json();
-            
-            // BUSCAR POR LA CLASE CORRECTA
-            const badge = document.querySelector('.carrito-counter');
-            if (badge) {
-                badge.textContent = result.contador;
-                console.log('✅ Contador actualizado:', result.contador);
-            } else {
-                console.log('❌ No se encontró el badge con clase carrito-counter');
-                // Intentar con cualquier badge en el navbar como fallback
-                const fallbackBadge = document.querySelector('.navbar .badge');
-                if (fallbackBadge) {
-                    fallbackBadge.textContent = result.contador;
-                }
-            }
-        } catch (error) {
-            console.error('Error al actualizar contador:', error);
+async actualizarContadorNavbar() {
+    try {
+        const response = await fetch('../controladores/obtener_contador_carrito.php');
+        const result = await response.json();
+        
+        const badge = document.querySelector('.carrito-counter') || 
+                     document.querySelector('.navbar .badge') || 
+                     document.querySelector('.badge');
+        
+        if (badge) {
+            badge.textContent = result.contador;
         }
+    } catch (error) {
+        console.error('Error al actualizar contador:', error);
     }
+}
 
     procederPago() {
         // Redirigir a página de pago o mostrar modal

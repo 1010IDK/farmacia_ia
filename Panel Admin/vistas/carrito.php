@@ -190,7 +190,7 @@ $total = $subtotal + $envio + $impuestos;
                                         <h5 class="text-white mb-1"><?php echo htmlspecialchars($producto['nombre']); ?></h5>
                                         <p class="text-light mb-1">Categoría: <?php echo htmlspecialchars($producto['categoria']); ?></p>
                                         <p class="text-light mb-1">Stock disponible: <?php echo $producto['stock']; ?></p>
-                                        <p class="text-warning mb-0 fw-bold">$<?php echo number_format($producto['precio'], 2); ?></p>
+                                        <p class="text-warning mb-0 fw-bold">Bs.<?php echo number_format($producto['precio'], 2); ?></p>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <div class="d-flex align-items-center me-3">
@@ -208,7 +208,7 @@ $total = $subtotal + $envio + $impuestos;
                                     </div>
                                 </div>
                                 <div class="mt-2 text-end">
-                                    <strong class="text-white">Subtotal: $<?php echo number_format($producto['precio'] * $producto['dc_cantidad'], 2); ?></strong>
+                                    <strong class="text-white">Subtotal: Bs.<?php echo number_format($producto['precio'] * $producto['dc_cantidad'], 2); ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -223,20 +223,20 @@ $total = $subtotal + $envio + $impuestos;
 
                             <div class="d-flex justify-content-between text-light mb-2">
                                 <span>Subtotal:</span>
-                                <span id="subtotal-general">$<?php echo number_format($subtotal, 2); ?></span>
+                                <span id="subtotal-general">Bs.<?php echo number_format($subtotal, 2); ?></span>
                             </div>
                             <div class="d-flex justify-content-between text-light mb-2">
                                 <span>Envío:</span>
-                                <span id="envio">$<?php echo number_format($envio, 2); ?></span>
+                                <span id="envio">Bs.<?php echo number_format($envio, 2); ?></span>
                             </div>
                             <div class="d-flex justify-content-between text-light mb-3">
                                 <span>Impuestos (16%):</span>
-                                <span id="impuestos">$<?php echo number_format($impuestos, 2); ?></span>
+                                <span id="impuestos">Bs.<?php echo number_format($impuestos, 2); ?></span>
                             </div>
 
                             <div class="d-flex justify-content-between text-white mb-4">
                                 <strong>Total:</strong>
-                                <strong id="total-final">$<?php echo number_format($total, 2); ?></strong>
+                                <strong id="total-final">Bs.<?php echo number_format($total, 2); ?></strong>
                             </div>
 
                             <button class="btn w-100 text-white mb-3 proceder-pago"
