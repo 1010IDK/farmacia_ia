@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia - Barra de Navegación Mejorada</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .navbar {
+            background-color: #151110 !important;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            min-height: 60px;
+        }
+        
+        #farmacia {
+            width: 150px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            padding: 4px;
+            transition: transform 0.2s;
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        #farmacia:hover {
+            transform: scale(1.05);
+            filter: brightness(1.3) contrast(1.2);
+        }
+        
+        .btn-search {
+            --bs-btn-color: #fff;
+            --bs-btn-border-color: #D2C1B6;
+            --bs-btn-bg: #D2C1B6;
+            --bs-btn-hover-color: #000;
+            --bs-btn-hover-bg: #e8d9cf;
+            --bs-btn-hover-border-color: #e8d9cf;
+            --bs-btn-active-color: #000;
+            --bs-btn-active-bg: #e8d9cf;
+            --bs-btn-active-border-color: #e8d9cf;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cart {
+            --bs-btn-color: #fff;
+            --bs-btn-border-color: #D2C1B6;
+            --bs-btn-hover-color: #000;
+            --bs-btn-hover-bg: #D2C1B6;
+            --bs-btn-hover-border-color: #D2C1B6;
+            --bs-btn-active-color: #000;
+            --bs-btn-active-bg: #D2C1B6;
+            --bs-btn-active-border-color: #D2C1B6;
+        }
+        
+        .form-control:focus {
+            border-color: #D2C1B6;
+            box-shadow: 0 0 0 0.25rem rgba(210, 193, 182, 0.4);
+        }
+        
+        .form-control {
+            border-color: #D2C1B6;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .dropdown-item:active,
+        .dropdown-item:hover {
+            background-color: #D2C1B6;
+        }
+        
+        .nav-link {
+            padding: 0.4rem 0.8rem !important;
+            color: #fff !important;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #D2C1B6 !important;
+        }
+        
+        /* Ajustes para mejorar la responsividad */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                margin-top: 10px;
+                background-color: #151110;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            
+            .search-form {
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .nav-item {
+                margin: 5px 0;
+            }
+            
+            .left-section, .right-section {
+                width: 100%;
+            }
+        }
+        
+        /* Estilo para el badge del carrito */
+        .badge-cart {
+            background-color: #fff;
+            color: #151110;
+        }
+        
+        /* Efecto sutil para la barra de búsqueda al hacer hover */
+        .search-container:hover .form-control {
+            border-color: #e8d9cf;
+            box-shadow: 0 0 0 0.25rem rgba(232, 217, 207, 0.3);
+        }
+        
+        .search-container:hover .btn-search {
+            background-color: #e8d9cf;
+            border-color: #e8d9cf;
+        }
+        
+        /* Distribución de elementos */
+        .left-section {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .categories-nav {
+            margin-right: 20px;
+        }
+        
+        .search-container {
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" id="navegador">
+        <div class="container-fluid">
+            <!-- Logo a la izquierda -->
+            <a class="navbar-brand me-0" href="index.html">
+                <div style="background-color: rgba(255,255,255,0.1); padding: 5px; border-radius: 8px; display: inline-block;">
+                    <img src="diseno/img/sera.png" alt="farmacia" id="farmacia">
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Sección izquierda: Categorías y buscador -->
+                <div class="left-section">
+                    <!-- Categorías -->
+                    <ul class="navbar-nav categories-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Categorías
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="vistas/catalogo.php">Todos los productos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="vistas/catalogo_spec.php?categoria=1">Comida y bebida</a></li>
+                                <li><a class="dropdown-item" href="vistas/catalogo_spec.php?categoria=2">Medicina</a></li>
+                                <li><a class="dropdown-item" href="vistas/catalogo_spec.php?categoria=3">Cuidado personal</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <!-- Barra de búsqueda -->
+                    <div class="search-container">
+                        <form class="d-flex search-form" role="search">
+                            <div class="input-group">
+                                <input class="form-control" type="search" placeholder="Buscar productos..." aria-label="Search">
+                                <button class="btn btn-search" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Sección derecha: Inicio de sesión y carrito -->
+                <div class="right-section">
+                    <ul class="navbar-nav user-actions">
+                        <li class="nav-item">
+                            <button class="btn btn-cart" type="button" onclick="showLoginAlert()">
+                                <i class="bi-cart-fill me-1"></i>
+                                Carrito
+                                <span class="badge badge-cart ms-1">0</span>
+                            </button>
+                        </li>
+                                                <li class="nav-item">
+                            <a class="nav-link" href="vistas/login_register_user.php">
+                                <i class="bi bi-person-fill me-1"></i> Iniciar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-light border-start border-3 border-danger">
+                <i class="bi bi-exclamation-circle-fill text-danger me-2"></i>
+                <strong class="me-auto text-dark">Acceso requerido</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-light text-dark">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle text-danger me-2"></i>
+                    <span>Debes iniciar sesión para acceder al carrito de compras.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido de ejemplo -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2>Productos Destacados</h2>
+                <p>Esta es una página de ejemplo para mostrar cómo se ve la barra de navegación con contenido.</p>
+                
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Acetaminofén 650 mg</h5>
+                        <p class="card-text">Para el alivio del dolor y la fiebre. 10 comprimidos.</p>
+                        <button class="btn btn-search">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showLoginAlert() {
+            const toast = new bootstrap.Toast(document.getElementById('loginToast'));
+            toast.show();
+        }
+    </script>
+</body>
+</html>

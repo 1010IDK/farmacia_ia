@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="icon" href="../diseno/icons/login.svg" type="image/svg+xml">
     <meta charset="UTF-8"> <!-- Define la codificación de caracteres como UTF-8 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Hace que el diseño sea responsivo -->
     <title>Farmamigo IV - iniciar sesion y Registro</title> <!-- Título que aparece en la pestaña del navegador -->

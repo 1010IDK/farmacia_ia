@@ -32,6 +32,7 @@ $descripcion = htmlspecialchars($producto['descripcion'] ?? 'Sin descripción');
     <link rel="stylesheet" href="../diseno/icons/icons-1.13.1/font/bootstrap-icons.min.css">
     <!--Css-->
     <link rel="stylesheet" href="../diseno/css/producto.css">
+    <link rel="icon" href="../diseno/icons/catalogo.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,21 +50,48 @@ $descripcion = htmlspecialchars($producto['descripcion'] ?? 'Sin descripción');
               <!-- <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li> -->
-              <li class="nav-item" id="carrito">
-                <button class="btn btn-outline-dark" type="submit">
-                  <i class="bi-cart-fill me-1 text-white"></i>
-                  Cart
-                  <span class="badge text-black ms-1 text-white">0</span>
-              </button>
-              </li>
-            </ul>
+                    <li class="nav-item" id="carrito">
+                        <!-- Botón del carrito -->
+                        <button class="btn btn-outline-dark" type="button" onclick="showLoginAlert()">
+                            <i class="bi-cart-fill me-1 text-white"></i>
+                            Cart
+                            <span class="badge text-black ms-1 text-white">0</span>
+                        </button>
+
+                        <!-- Toast container -->
+                        <div class="toast-container position-fixed top-0 end-0 p-3">
+                            <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header bg-light border-start border-3 border-danger">
+                                    <i class="bi bi-exclamation-circle-fill text-danger me-2"></i>
+                                    <strong class="me-auto text-dark">Acceso requerido</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body bg-light text-dark">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-info-circle text-danger me-2"></i>
+                                        <span>Debes iniciar sesión para acceder al carrito de compras.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            function showLoginAlert() {
+                                const toast = new bootstrap.Toast(document.getElementById('loginToast'));
+                                toast.show();
+                            }
+                        </script>
+                    </li>
+                </ul>
             <div class="d-flex flex-row-reverse" id="search">
-                <div class="p-2 ">
-                    <form class="d-flex" role="search">
-                    <input class="form-control me-2 " type="search" placeholder="Buscar" aria-label="Search"/>
-                    <button class="btn " type="submit" id="search"><i style="font-size: 15px;" class="bi bi-search text-white"></i></button>
-                  </form>
-                </div>
+                    <div class="p-2 ">
+                        <form class="d-flex" role="search" method="GET" action="catalogo.php">
+                            <input class="form-control me-2" type="search" name="busqueda" placeholder="Buscar" aria-label="Search"
+                                value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>" />
+                            <button class="btn" type="submit" id="search">
+                                <i style="font-size: 15px;" class="bi bi-search text-white"></i>
+                            </button>
+                        </form>
+                    </div>
                 <div class="p-2 text-white" id="buscar">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown">

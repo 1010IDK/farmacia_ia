@@ -57,6 +57,7 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
     <!--Css-->
     <link rel="stylesheet" href="../diseno/css/nav_log.css">
     <link rel="stylesheet" href="../diseno/css/producto.css">
+    <link rel="icon" href="../diseno/icons/catalogo.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,12 +100,15 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
 </li>
             </ul>
             <div class="d-flex flex-row-reverse" id="search">
-                <div class="p-2 ">
-                    <form class="d-flex" role="search">
-                    <input class="form-control me-2 " type="search" placeholder="Buscar" aria-label="Search"/>
-                    <button class="btn " type="submit" id="search"><i style="font-size: 15px;" class="bi bi-search text-white"></i></button>
-                  </form>
-                </div>
+                    <div class="p-2 ">
+                        <form class="d-flex" role="search" method="GET" action="catalogo_log.php">
+                            <input class="form-control me-2" type="search" name="busqueda" placeholder="Buscar" aria-label="Search"
+                                value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>" />
+                            <button class="btn" type="submit" id="search">
+                                <i style="font-size: 15px;" class="bi bi-search text-white"></i>
+                            </button>
+                        </form>
+                    </div>
                 <div class="p-2 text-white" id="buscar">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown">
@@ -127,7 +131,7 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
                   <?php echo htmlspecialchars($nombre); ?>
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Informacion personal</a></li>
+                    <li><a class="dropdown-item" href="informacion_user.php">Informacion personal</a></li>
                     <li><a class="dropdown-item" href="#">Configuracion</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item logout" href="../controladores/logout.php">Cerrar sesion</a></li>

@@ -30,6 +30,7 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
     <link rel="stylesheet" href="diseno/icons/icons-1.13.1/font/bootstrap-icons.min.css">
     <!--Css-->
     <link rel="stylesheet" href="diseno/css/login.css">
+    <link rel="icon" href="diseno/icons/house.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,12 +74,15 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
 </li>
             </ul>
             <div class="d-flex flex-row-reverse" id="search">
-                <div class="p-2 ">
-                    <form class="d-flex" role="search">
-                    <input class="form-control me-2 " type="search" placeholder="Buscar" aria-label="Search"/>
-                    <button class="btn " type="submit" id="search"><i style="font-size: 15px;" class="bi bi-search text-white"></i></button>
-                  </form>
-                </div>
+                    <div class="p-2 ">
+                        <form class="d-flex" role="search" method="GET" action="vistas/catalogo_log.php">
+                            <input class="form-control me-2" type="search" name="busqueda" placeholder="Buscar" aria-label="Search"
+                                value="<?php echo isset($_GET['busqueda']) ? htmlspecialchars($_GET['busqueda']) : ''; ?>" />
+                            <button class="btn" type="submit" id="search">
+                                <i style="font-size: 15px;" class="bi bi-search text-white"></i>
+                            </button>
+                        </form>
+                    </div>
                 <div class="p-2 text-white" id="buscar">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown">
@@ -101,7 +105,7 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
                   <?php echo htmlspecialchars(string: $nombre); ?>
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Informacion personal</a></li>
+                    <li><a class="dropdown-item" href="vistas/informacion_user.php">Informacion personal</a></li>
                     <li><a class="dropdown-item" href="#">Configuracion</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item logout" href="controladores/logout.php">Cerrar sesion</a></li>
@@ -168,7 +172,7 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
                     <br> 3 Cuando estés listo, presiona el botón “Realizar pedido” para apartarlos.
                     <br> ✅ Tu pedido quedará registrado y los productos estarán reservados para ti al momento de recogerlos.</p>
                 </div>
-                <div class="card-footer"><a class="btn btn-outline-dark mt-auto text-white" href="#!">Ver carrito de compras</a></div>
+                <div class="card-footer"><a class="btn btn-outline-dark mt-auto text-white" href="vistas/carrito.php">Ver carrito de compras</a></div>
             </div>
         </div>
         <div class="col-md-4 mb-5">

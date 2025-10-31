@@ -18,7 +18,6 @@
   padding: 8px;                  /* Espacio interno */
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 #farmacia:hover {
   transform: scale(1.05);        /* Efecto de aumento al pasar el mouse */
   background: #d2c1b600;           /* Fondo más claro al hacer hover */

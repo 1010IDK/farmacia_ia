@@ -190,3 +190,21 @@ ia
   color: #1B3C53;
   border-color: #D2C1B6;
 }
+.bi {
+  color: #fff;
+  font-size: 25px ;
+}
+.bi-cart2:hover {
+  color: #D2C1B6;
+}
+#iniciar_sesion {
+  color: #fff;
+}
+
+#iniciar_sesion:hover {
+  color: #D2C1B6;
+}
+
+#iniciar_sesion:hover i {
+  color: #D2C1B6;
+}
