@@ -191,9 +191,129 @@ if (!$resultado) {
   </div>
 </section>
 <!--footer-->
-<footer class="py-5" style="background-color: #151110;">
-  <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-</footer>
+<footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row">
+                <!-- Columna 1: Información de la farmacia -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="text-warning mb-3">
+                        <i class="bi bi-capsule me-2"></i>Farmamigo IV
+                    </h5>
+                    <p class="text-light mb-3">
+                        Tu salud es nuestra prioridad. Ofrecemos medicamentos de calidad,
+                        asesoramiento profesional y servicio personalizado.
+                    </p>
+                    <div class="d-flex">
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-facebook fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-instagram fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-whatsapp fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white">
+                            <i class="bi bi-telephone fs-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Enlaces rápidos -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Enlaces Rápidos</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="text-light text-decoration-none">
+                                <i class="bi bi-chevron-right me-1 small"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="catalogo_log.php" class="text-light text-decoration-none">
+                                <i class="bi bi-chevron-right me-1 small"></i>Medicamentos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Servicios -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Nuestros Servicios</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Asesoramiento farmacéutico
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Control de presión arterial
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Atencion de calidad
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Reserva online
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Contacto y horario -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Contacto</h6>
+                    <div class="mb-3">
+                        <p class="mb-1">
+                            <i class="bi bi-geo-alt text-warning me-2"></i>
+                            <small>San Pedro de los Altos en el centro comercial San Pedro, sector Ventorrillo Cipreces, calle proceso, Vía Principal de San Pedro, 1201, Miranda.</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-telephone text-warning me-2"></i>
+                            <small>0424 5876950</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-whatsapp text-warning me-2"></i>
+                            <small>0424 5876950</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-envelope text-warning me-2"></i>
+                            <small>farmamigoiv5@gmail.com</small>
+                        </p>
+                    </div>
+
+                    <h6 class="text-warning mb-2">Horario</h6>
+                    <div class="mb-2">
+                        <small class="text-light">Lunes a Viernes: 7:00 AM - 10:00 PM</small>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-light">Sábados: 8:00 AM - 8:00 PM</small>
+                    </div>
+                    <div>
+                        <small class="text-light">Domingos: 9:00 AM - 2:00 PM</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="bg-warning my-4">
+
+            <!-- Fila inferior -->
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <small class="text-light">
+                        &copy; 2025 Programadores universitarios anónimos.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
 <script src="../boostrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -257,3 +257,6 @@ ia
     border-style: solid;
     border-color: #333 transparent transparent transparent;
 }
+.bg-dark {
+  margin-bottom: 0px !important;
+}

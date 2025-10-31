@@ -198,93 +198,227 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
         </div>
     </div>
 </section>
-        <!-- Related items section-->
-        <section class="py-5 productos_cartas" id="productos_cartas">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h2 class="fw-bolder mb-4">Tambien te podrian interesar</h2>
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                  <img class="card-img-top" src="../diseno/img/cartas-index/carta (1).jpg" alt="..." />
-                  <!-- Product details-->
-                  <div class="card-body p-4">
-                      <div class="text-center">
-                          <!-- Product name-->
-                          <h5 class="fw-bolder">nombre producto</h5>
-                          <!-- Product price-->
-                          $40.00 - $80.00
-                      </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                      <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver producto</a></div>
-                  </div>
-              </div>
-          </div>
-          <div class="col mb-5">
-              <div class="card h-100 text-white">
-                  <!-- Sale badge-->
-                  <!-- Product image-->
-                  <img class="card-img-top" src="../diseno/img/cartas-index/carta (2).jpg" alt="..." />
-                  <!-- Product details-->
-                  <div class="card-body p-4">
-                      <div class="text-center">
-                          <!-- Product name-->
-                          <h5 class="fw-bolder">nombre producto</h5>
-                          <!-- Product price-->
-                          $18.00
-                      </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                      <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver producto</a></div>
-                  </div>
-              </div>
-          </div>
-          <div class="col mb-5">
-              <div class="card h-100 text-white">
-                  <!-- Sale badge-->
-                  <!-- Product image-->
-                  <img class="card-img-top" src="../diseno/img/cartas-index/carta (3).jpg" alt="..." />
-                  <!-- Product details-->
-                  <div class="card-body p-4">
-                      <div class="text-center">
-                          <!-- Product name-->
-                          <h5 class="fw-bolder">producto nombre</h5>
-                          <!-- Product price-->
-                          $25.00
-                      </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                      <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver producto</a></div>
-                  </div>
-              </div>
-          </div>
-          <div class="col mb-5">
-              <div class="card h-100 text-white">
-                  <!-- Product image-->
-                  <img class="card-img-top" src="../diseno/img/cartas-index/carta (4).jpg" alt="..." />
-                  <!-- Product details-->
-                  <div class="card-body p-4">
-                      <div class="text-center">
-                          <!-- Product name-->
-                          <h5 class="fw-bolder">nombre producto</h5>
-                          <!-- Product price-->
-                          $40.00
-                      </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                      <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver producto</a></div>
-                  </div>
-              </div>
-          </div>
-        </section>
+<!-- Related items section-->
+<section class="py-5 productos_cartas" id="productos_cartas">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4 text-white">También te podrían interesar</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <?php
+            // Consulta para productos relacionados (misma categoría, excluyendo el producto actual)
+            $id_categoria_actual = $producto['id_categoria'];
+            $sql_relacionados = "SELECT * FROM productos 
+                               WHERE id_categoria = $id_categoria_actual 
+                               AND id_producto != $id_producto 
+                               AND cantidad > 0 
+                               LIMIT 4";
+            $resultado_relacionados = mysqli_query($conexion, $sql_relacionados);
+            
+            if ($resultado_relacionados && mysqli_num_rows($resultado_relacionados) > 0):
+                while($producto_relacionado = mysqli_fetch_assoc($resultado_relacionados)):
+                    $ruta_db_rel = $producto_relacionado['imagen'] ?? 'diseno/img/default.png';
+                    $ruta_final_rel = '../' . $ruta_db_rel;
+                    $precio_rel = number_format($producto_relacionado['precio'], 2);
+            ?>
+            <div class="col mb-5">
+                <div class="card h-100 text-white" id="carta_producto">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="<?php echo htmlspecialchars($ruta_final_rel); ?>" alt="<?php echo htmlspecialchars($producto_relacionado['nombre']); ?>" />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder"><?php echo htmlspecialchars($producto_relacionado['nombre']); ?></h5>
+                            <!-- Product price-->
+                            Bs.<?php echo $precio_rel; ?>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="producto_log.php?id=<?php echo $producto_relacionado['id_producto']; ?>">
+                                Ver producto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+                endwhile;
+            else:
+                // Si no hay productos relacionados, mostrar productos aleatorios
+                $sql_aleatorios = "SELECT * FROM productos 
+                                 WHERE id_producto != $id_producto 
+                                 AND cantidad > 0 
+                                 ORDER BY RAND() 
+                                 LIMIT 4";
+                $resultado_aleatorios = mysqli_query($conexion, $sql_aleatorios);
+                
+                if ($resultado_aleatorios && mysqli_num_rows($resultado_aleatorios) > 0):
+                    while($producto_aleatorio = mysqli_fetch_assoc($resultado_aleatorios)):
+                        $ruta_db_ale = $producto_aleatorio['imagen'] ?? 'diseno/img/default.png';
+                        $ruta_final_ale = '../' . $ruta_db_ale;
+                        $precio_ale = number_format($producto_aleatorio['precio'], 2);
+            ?>
+            <div class="col mb-5">
+                <div class="card h-100 text-white" id="carta_producto">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="<?php echo htmlspecialchars($ruta_final_ale); ?>" alt="<?php echo htmlspecialchars($producto_aleatorio['nombre']); ?>" />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder"><?php echo htmlspecialchars($producto_aleatorio['nombre']); ?></h5>
+                            <!-- Product price-->
+                            Bs.<?php echo $precio_ale; ?>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark mt-auto" href="producto_log.php?id=<?php echo $producto_aleatorio['id_producto']; ?>">
+                                Ver producto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+                    endwhile;
+                else:
+            ?>
+            <div class="col-12 text-center text-white">
+                <p>No hay productos disponibles en este momento.</p>
+            </div>
+            <?php
+                endif;
+            endif;
+            ?>
+        </div>
+    </div>
+</section>
         <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-        </footer>
+<footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row">
+                <!-- Columna 1: Información de la farmacia -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="text-warning mb-3">
+                        <i class="bi bi-capsule me-2"></i>Farmamigo IV
+                    </h5>
+                    <p class="text-light mb-3">
+                        Tu salud es nuestra prioridad. Ofrecemos medicamentos de calidad,
+                        asesoramiento profesional y servicio personalizado.
+                    </p>
+                    <div class="d-flex">
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-facebook fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-instagram fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white me-3">
+                            <i class="bi bi-whatsapp fs-5"></i>
+                        </a>
+                        <a href="#" class="text-white">
+                            <i class="bi bi-telephone fs-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Enlaces rápidos -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Enlaces Rápidos</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="#" class="text-light text-decoration-none">
+                                <i class="bi bi-chevron-right me-1 small"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="catalogo_log.php" class="text-light text-decoration-none">
+                                <i class="bi bi-chevron-right me-1 small"></i>Medicamentos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Servicios -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Nuestros Servicios</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Asesoramiento farmacéutico
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Control de presión arterial
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Atencion de calidad
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <span class="text-light">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Reserva online
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Contacto y horario -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-warning mb-3">Contacto</h6>
+                    <div class="mb-3">
+                        <p class="mb-1">
+                            <i class="bi bi-geo-alt text-warning me-2"></i>
+                            <small>San Pedro de los Altos en el centro comercial San Pedro, sector Ventorrillo Cipreces, calle proceso, Vía Principal de San Pedro, 1201, Miranda.</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-telephone text-warning me-2"></i>
+                            <small>0424 5876950</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-whatsapp text-warning me-2"></i>
+                            <small>0424 5876950</small>
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-envelope text-warning me-2"></i>
+                            <small>farmamigoiv5@gmail.com</small>
+                        </p>
+                    </div>
+
+                    <h6 class="text-warning mb-2">Horario</h6>
+                    <div class="mb-2">
+                        <small class="text-light">Lunes a Viernes: 7:00 AM - 10:00 PM</small>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-light">Sábados: 8:00 AM - 8:00 PM</small>
+                    </div>
+                    <div>
+                        <small class="text-light">Domingos: 9:00 AM - 2:00 PM</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="bg-warning my-4">
+
+            <!-- Fila inferior -->
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <small class="text-light">
+                        &copy; 2025 Programadores universitarios anónimos.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script defer src="../boostrap/js/bootstrap.bundle.min.js"></script>
   </body>

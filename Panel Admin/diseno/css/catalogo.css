@@ -208,3 +208,6 @@ ia
 #iniciar_sesion:hover i {
   color: #D2C1B6;
 }
+.bg-dark {
+  margin-bottom: 0px !important;
+}

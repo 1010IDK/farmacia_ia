@@ -264,7 +264,7 @@ include("config/conexion.php");
                 <!-- Columna 1: Información de la farmacia -->
                 <div class="col-lg-4 col-md-6 mb-4">
                     <h5 class="text-warning mb-3">
-                        <i class="bi bi-capsule me-2"></i>Farmacia Salud Total
+                        <i class="bi bi-capsule me-2"></i>Farmamigo IV
                     </h5>
                     <p class="text-light mb-3">
                         Tu salud es nuestra prioridad. Ofrecemos medicamentos de calidad,
@@ -296,23 +296,8 @@ include("config/conexion.php");
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" class="text-light text-decoration-none">
+                            <a href="vistas/catalogo.php" class="text-light text-decoration-none">
                                 <i class="bi bi-chevron-right me-1 small"></i>Medicamentos
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-light text-decoration-none">
-                                <i class="bi bi-chevron-right me-1 small"></i>Dermocosmética
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-light text-decoration-none">
-                                <i class="bi bi-chevron-right me-1 small"></i>Promociones
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-light text-decoration-none">
-                                <i class="bi bi-chevron-right me-1 small"></i>Contacto
                             </a>
                         </li>
                     </ul>
@@ -331,19 +316,13 @@ include("config/conexion.php");
                         <li class="mb-2">
                             <span class="text-light">
                                 <i class="bi bi-check-circle text-success me-2"></i>
-                                Entrega a domicilio
-                            </span>
-                        </li>
-                        <li class="mb-2">
-                            <span class="text-light">
-                                <i class="bi bi-check-circle text-success me-2"></i>
                                 Control de presión arterial
                             </span>
                         </li>
                         <li class="mb-2">
                             <span class="text-light">
                                 <i class="bi bi-check-circle text-success me-2"></i>
-                                Programa de dosis unitaria
+                                Atencion de calidad
                             </span>
                         </li>
                         <li class="mb-2">
@@ -361,19 +340,19 @@ include("config/conexion.php");
                     <div class="mb-3">
                         <p class="mb-1">
                             <i class="bi bi-geo-alt text-warning me-2"></i>
-                            <small>Av. Principal #123, Ciudad</small>
+                            <small>San Pedro de los Altos en el centro comercial San Pedro, sector Ventorrillo Cipreces, calle proceso, Vía Principal de San Pedro, 1201, Miranda.</small>
                         </p>
                         <p class="mb-1">
                             <i class="bi bi-telephone text-warning me-2"></i>
-                            <small>(+123) 456-7890</small>
+                            <small>0424 5876950</small>
                         </p>
                         <p class="mb-1">
                             <i class="bi bi-whatsapp text-warning me-2"></i>
-                            <small>+123 456-7890</small>
+                            <small>0424 5876950</small>
                         </p>
                         <p class="mb-1">
                             <i class="bi bi-envelope text-warning me-2"></i>
-                            <small>info@farmaciasaludtotal.com</small>
+                            <small>farmamigoiv5@gmail.com</small>
                         </p>
                     </div>
 
@@ -396,14 +375,7 @@ include("config/conexion.php");
             <div class="row align-items-center">
                 <div class="col-md-6 mb-2 mb-md-0">
                     <small class="text-light">
-                        &copy; 2024 Farmacia Salud Total. Todos los derechos reservados.
-                    </small>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <small class="text-light">
-                        <a href="#" class="text-light text-decoration-none me-3">Términos y condiciones</a>
-                        <a href="#" class="text-light text-decoration-none me-3">Política de privacidad</a>
-                        <a href="#" class="text-light text-decoration-none">Aviso legal</a>
+                        &copy; 2025 Programadores universitarios anónimos.
                     </small>
                 </div>
             </div>

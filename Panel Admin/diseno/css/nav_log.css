@@ -83,3 +83,6 @@
     --bs-btn-color: #fff;
     --bs-btn-bg: #ffffff00;
 }
+.bg-dark {
+  margin-bottom: 0px !important;
+}

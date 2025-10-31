@@ -209,3 +209,6 @@
     color: #D2C1B6;
     margin-bottom: 20px;
 }
+.bg-dark {
+  margin-bottom: 0px !important;
+}
