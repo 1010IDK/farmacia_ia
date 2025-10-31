@@ -13,33 +13,162 @@ class Carrito {
     }
     
     initEventListeners() {
-        // Eliminar producto
-        document.querySelectorAll('.eliminar-producto').forEach(btn => {
-            btn.addEventListener('click', (e) => this.eliminarProducto(e));
-        });
+    // Eliminar producto
+    document.querySelectorAll('.eliminar-producto').forEach(btn => {
+        btn.addEventListener('click', (e) => this.eliminarProducto(e));
+    });
 
-        // Cambiar cantidad
-        document.querySelectorAll('.restar-cantidad').forEach(btn => {
-            btn.addEventListener('click', (e) => this.cambiarCantidad(e, -1));
-        });
+    // Cambiar cantidad
+    document.querySelectorAll('.restar-cantidad').forEach(btn => {
+        btn.addEventListener('click', (e) => this.cambiarCantidad(e, -1));
+    });
 
-        document.querySelectorAll('.sumar-cantidad').forEach(btn => {
-            btn.addEventListener('click', (e) => this.cambiarCantidad(e, 1));
-        });
+    document.querySelectorAll('.sumar-cantidad').forEach(btn => {
+        btn.addEventListener('click', (e) => this.cambiarCantidad(e, 1));
+    });
 
-        // Vaciar carrito
-        const vaciarBtn = document.querySelector('.vaciar-carrito');
-        if (vaciarBtn) {
-            vaciarBtn.addEventListener('click', () => this.vaciarCarrito());
-        }
-
-        // Proceder al pago
-        const pagoBtn = document.querySelector('.proceder-pago');
-        if (pagoBtn) {
-            pagoBtn.addEventListener('click', () => this.procederPago());
-        }
+    // Vaciar carrito
+    const vaciarBtn = document.querySelector('.vaciar-carrito');
+    if (vaciarBtn) {
+        vaciarBtn.addEventListener('click', () => this.vaciarCarrito());
     }
 
+    // Proceder al pago
+    const pagoBtn = document.querySelector('.proceder-pago');
+    if (pagoBtn) {
+        pagoBtn.addEventListener('click', () => this.procederPago());
+    }
+
+    // Proceder al apartado
+    const apartadoBtn = document.querySelector('.proceder-apartado');
+    if (apartadoBtn) {
+        apartadoBtn.addEventListener('click', () => this.procesarApartado());
+    }
+}
+async procesarApartado() {
+    try {
+        // Obtener información directamente de los productos visibles
+        const productosElements = document.querySelectorAll('.producto-item');
+        
+        if (productosElements.length === 0) {
+            this.mostrarMensaje('El carrito está vacío', 'error');
+            return;
+        }
+
+        // Construir mensaje de confirmación desde los productos visibles
+        let mensajeConfirmacion = "¿Confirmar apartado de pedido?\n\n";
+        mensajeConfirmacion += "📦 PRODUCTOS EN EL CARRITO:\n";
+        mensajeConfirmacion += "─".repeat(50) + "\n";
+        
+        let totalProductos = 0;
+
+        productosElements.forEach((producto, index) => {
+            try {
+                // Obtener nombre
+                const nombreElement = producto.querySelector('h5.text-white');
+                const nombre = nombreElement ? nombreElement.textContent.trim() : `Producto ${index + 1}`;
+                
+                // Obtener cantidad
+                const cantidadElement = producto.querySelector('.cantidad');
+                const cantidad = cantidadElement ? parseInt(cantidadElement.textContent) : 1;
+                
+                // Obtener precio del producto
+                const precioElement = producto.querySelector('.text-warning');
+                let precioTexto = '0';
+                if (precioElement) {
+                    precioTexto = precioElement.textContent.replace('Bs.', '').replace('$', '').trim();
+                }
+                const precio = parseFloat(precioTexto) || 0;
+                
+                // Obtener subtotal del producto
+                const subtotalElement = producto.querySelector('.text-end strong');
+                let subtotalTexto = '0';
+                if (subtotalElement) {
+                    subtotalTexto = subtotalElement.textContent.replace('Subtotal:', '')
+                                                              .replace('Bs.', '')
+                                                              .replace('$', '')
+                                                              .trim();
+                }
+                const subtotal = parseFloat(subtotalTexto) || (precio * cantidad);
+                
+                totalProductos += subtotal;
+
+                // Agregar al mensaje
+                mensajeConfirmacion += `• ${nombre}\n`;
+                mensajeConfirmacion += `  Cantidad: ${cantidad} x Bs. ${precio.toFixed(2)} = Bs. ${subtotal.toFixed(2)}\n\n`;
+                
+            } catch (error) {
+                console.error('Error procesando producto:', error);
+            }
+        });
+
+        // Calcular impuestos y total
+        const impuestos = totalProductos * 0.16;
+        const totalFinal = totalProductos + impuestos;
+
+        mensajeConfirmacion += "─".repeat(50) + "\n";
+        mensajeConfirmacion += `Subtotal:    Bs. ${totalProductos.toFixed(2)}\n`;
+        mensajeConfirmacion += `Impuestos 16%: Bs. ${impuestos.toFixed(2)}\n`;
+        mensajeConfirmacion += `TOTAL:       Bs. ${totalFinal.toFixed(2)}\n\n`;
+        mensajeConfirmacion += "¿Deseas proceder con el apartado?\n\n";
+        mensajeConfirmacion += "📧 Se te enviará un código único por email.";
+
+        console.log("Mensaje de confirmación:", mensajeConfirmacion);
+
+        // Mostrar confirmación
+        if (!confirm(mensajeConfirmacion)) {
+            return;
+        }
+
+        // Proceder con el apartado
+        const response = await fetch('../controladores/procesar_apartado.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+
+        const text = await response.text();
+        console.log('Response text from server:', text);
+        const result = JSON.parse(text);
+
+        if (result.success) {
+            this.mostrarMensaje(result.message, 'success');
+            
+            // Mostrar código en alerta
+            let mensajeExito = "🎉 PEDIDO APARTADO EXITOSAMENTE\n\n";
+            mensajeExito += "🛒 TU CÓDIGO DE APARTADO:\n";
+            mensajeExito += "════════════════════════════\n";
+            mensajeExito += `📋 ${result.codigo}\n`;
+            mensajeExito += "════════════════════════════\n\n";
+            
+            if (result.email_enviado) {
+                mensajeExito += "📧 Se ha enviado un email con los detalles\n\n";
+            }
+            
+            mensajeExito += "💡 INSTRUCCIONES:\n";
+            mensajeExito += "• Guarda este código\n";
+            mensajeExito += "• Preséntalo en la farmacia\n";
+            mensajeExito += "• Realiza el pago\n";
+            mensajeExito += "• Recoge tus productos\n\n";
+            mensajeExito += "⏰ Válido por 7 días";
+            
+            alert(mensajeExito);
+            
+            // Redirigir a página principal
+            setTimeout(() => {
+                window.location.href = '../index_logeado.php';
+            }, 5000);
+            
+        } else {
+            this.mostrarMensaje(result.message, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error en procesarApartado:', error);
+        this.mostrarMensaje('Error de conexión al procesar apartado', 'error');
+    }
+}
     // ========== NUEVAS FUNCIONES PARA ACTUALIZAR PRECIOS ==========
     
     actualizarSubtotalProducto(item) {

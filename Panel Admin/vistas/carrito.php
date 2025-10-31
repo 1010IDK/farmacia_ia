@@ -239,9 +239,9 @@ $total = $subtotal + $envio + $impuestos;
                                 <strong id="total-final">Bs.<?php echo number_format($total, 2); ?></strong>
                             </div>
 
-                            <button class="btn w-100 text-white mb-3 proceder-pago"
-                                style="background-color: #1B3C53; border-color: #D2C1B6;">
-                                <i class="bi-lock-fill me-2"></i>Proceder al Pago
+                            <button class="btn w-100 text-white mb-3 proceder-apartado" 
+                            style="background-color: #1B3C53; border-color: #D2C1B6;">
+                            <i class="bi-lock-fill me-2"></i>Apartar Pedido
                             </button>
 
                             <a href="catalogo_log.php" class="btn w-100 text-white"
