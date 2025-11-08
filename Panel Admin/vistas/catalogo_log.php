@@ -20,6 +20,14 @@ if ($resultado && $fila = mysqli_fetch_assoc($resultado)) {
     $nombre = $fila['nombre'];
 }
 
+// ========== PAGINACIÓN ==========
+$productos_por_pagina = 12;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if ($pagina_actual < 1) $pagina_actual = 1;
+
+// Calcular el offset
+$offset = ($pagina_actual - 1) * $productos_por_pagina;
+
 // Manejar la búsqueda
 $busqueda = "";
 $where_condition = "";
@@ -31,12 +39,20 @@ if (isset($_GET['busqueda']) && !empty($_GET['busqueda'])) {
                           OR descripcion LIKE '%$busqueda%')";
 }
 
-// Consulta de productos con búsqueda
-$sql_productos = "SELECT * FROM productos $where_condition ORDER BY nombre";
+// Obtener el total de productos
+$sql_total = "SELECT COUNT(*) as total FROM productos $where_condition";
+$resultado_total = mysqli_query($conexion, $sql_total);
+$total_productos = mysqli_fetch_assoc($resultado_total)['total'];
+
+// Calcular total de páginas
+$total_paginas = ceil($total_productos / $productos_por_pagina);
+
+// Consulta de productos con búsqueda y paginación
+$sql_productos = "SELECT * FROM productos $where_condition ORDER BY nombre LIMIT $offset, $productos_por_pagina";
 $resultado_productos = mysqli_query($conexion, $sql_productos);
 
-// Contar resultados
-$total_resultados = mysqli_num_rows($resultado_productos);
+// Contar resultados de la página actual
+$resultados_pagina_actual = mysqli_num_rows($resultado_productos);
 ?>
 
 <!DOCTYPE html>
@@ -143,7 +159,7 @@ $total_resultados = mysqli_num_rows($resultado_productos);
             </h1>
             <p class="lead fw-normal text-white-50 mb-0">
                 <?php if ($busqueda): ?>
-                    Se encontraron <?php echo $total_resultados; ?> resultado(s)
+                    Se encontraron <?php echo $total_productos; ?> resultado(s)
                 <?php else: ?>
                     Explora nuestro extenso catálogo de productos
                 <?php endif; ?>
@@ -157,13 +173,22 @@ $total_resultados = mysqli_num_rows($resultado_productos);
 
 <section class="productos_cartas">
     <div class="container px-4 px-lg-5 ">
-        <?php if ($busqueda && $total_resultados == 0): ?>
+        <?php if ($busqueda && $total_productos == 0): ?>
             <div class="text-center text-white py-5">
                 <h3>No se encontraron productos para "<?php echo htmlspecialchars($busqueda); ?>"</h3>
                 <p>Intenta con otros términos de búsqueda</p>
                 <a href="catalogo_log.php" class="btn btn-primary">Ver todos los productos</a>
             </div>
         <?php else: ?>
+            <!-- ========== INFORMACIÓN DE PAGINACIÓN ========== -->
+            <?php if ($total_productos > 0): ?>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="text-white">
+                    Mostrando <?php echo ($offset + 1); ?> - <?php echo min($offset + $productos_por_pagina, $total_productos); ?> de <?php echo $total_productos; ?> productos
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center ">
                 <?php if ($resultado_productos && mysqli_num_rows($resultado_productos) > 0): ?>
                     <?php while($producto = mysqli_fetch_assoc($resultado_productos)): ?>
@@ -196,6 +221,71 @@ $total_resultados = mysqli_num_rows($resultado_productos);
                     </div>
                 <?php endif; ?>
             </div>
+
+            <!-- ========== PAGINACIÓN ========== -->
+            <?php if ($total_paginas > 1): ?>
+            <nav aria-label="Paginación de productos" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <!-- Botón Anterior -->
+                    <li class="page-item <?php echo $pagina_actual <= 1 ? 'disabled' : ''; ?>">
+                        <a class="page-link" 
+                           href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual - 1])); ?>" 
+                           aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Números de página -->
+                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                        <?php 
+                        // Mostrar solo páginas cercanas a la actual para no tener una lista muy larga
+                        $mostrar_pagina = false;
+                        if ($total_paginas <= 10) {
+                            $mostrar_pagina = true;
+                        } else {
+                            // Mostrar primeras 3, últimas 3 y páginas alrededor de la actual
+                            if ($i <= 3 || $i > $total_paginas - 3 || abs($i - $pagina_actual) <= 2) {
+                                $mostrar_pagina = true;
+                            }
+                        }
+                        ?>
+                        
+                        <?php if ($mostrar_pagina): ?>
+                            <?php if ($i == $pagina_actual): ?>
+                                <li class="page-item active">
+                                    <span class="page-link"><?php echo $i; ?></span>
+                                </li>
+                            <?php else: ?>
+                                <li class="page-item">
+                                    <a class="page-link" 
+                                       href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
+                                        <?php echo $i; ?>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        <?php elseif ($i == 4 && $pagina_actual > 5): ?>
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        <?php elseif ($i == $total_paginas - 3 && $pagina_actual < $total_paginas - 4): ?>
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+
+                    <!-- Botón Siguiente -->
+                    <li class="page-item <?php echo $pagina_actual >= $total_paginas ? 'disabled' : ''; ?>">
+                        <a class="page-link" 
+                           href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $pagina_actual + 1])); ?>" 
+                           aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <?php endif; ?>
+            <!-- ========== FIN PAGINACIÓN ========== -->
         <?php endif; ?>
     </div>
 </section>

@@ -156,7 +156,6 @@ if ($resultado && $fila = mysqli_fetch_assoc(result: $resultado)) {
                 <img class="card-img-top mb-5 mb-md-0" src="<?php echo $ruta_final; ?>" alt="Imagen de <?php echo $nombre_producto; ?>" />
             </div>
             <div class="col-md-6">
-                <div class="small mb-1">ID: <?php echo $id_producto; ?></div>
                 <h1 class="display-5 fw-bolder text-white"><?php echo $nombre_producto; ?></h1>
                 <div class="fs-5 mb-5">
                     <span class="text-white">Bs.<?php echo $precio; ?></span>

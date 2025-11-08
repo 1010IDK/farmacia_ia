@@ -229,10 +229,6 @@ $total = $subtotal + $envio + $impuestos;
                                 <span>Subtotal:</span>
                                 <span id="subtotal-general">Bs.<?php echo number_format($subtotal, 2); ?></span>
                             </div>
-                            <div class="d-flex justify-content-between text-light mb-2">
-                                <span>Envío:</span>
-                                <span id="envio">Bs.<?php echo number_format($envio, 2); ?></span>
-                            </div>
                             <div class="d-flex justify-content-between text-light mb-3">
                                 <span>Impuestos (16%):</span>
                                 <span id="impuestos">Bs.<?php echo number_format($impuestos, 2); ?></span>

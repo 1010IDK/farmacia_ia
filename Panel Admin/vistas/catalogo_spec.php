@@ -1,12 +1,29 @@
 <?php
 include("../config/conexion.php");
 
+// ========== PAGINACIÓN ==========
+$productos_por_pagina = 12;
+$pagina_actual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if ($pagina_actual < 1) $pagina_actual = 1;
+
+// Calcular el offset
+$offset = ($pagina_actual - 1) * $productos_por_pagina;
+
 // Obtener la categoría desde la URL
 $categoria_id = isset($_GET['categoria']) ? intval($_GET['categoria']) : 1;
 
-// Consulta CORREGIDA - sin la columna 'activo'
-$sql = "SELECT * FROM productos WHERE id_categoria = $categoria_id";
+// Obtener el total de productos en esta categoría
+$sql_total = "SELECT COUNT(*) as total FROM productos WHERE id_categoria = $categoria_id";
+$resultado_total = mysqli_query($conexion, $sql_total);
+$total_productos = mysqli_fetch_assoc($resultado_total)['total'];
+
+// Calcular total de páginas
+$total_paginas = ceil($total_productos / $productos_por_pagina);
+
+// Consulta CORREGIDA - sin la columna 'activo' y con paginación
+$sql = "SELECT * FROM productos WHERE id_categoria = $categoria_id ORDER BY nombre LIMIT $offset, $productos_por_pagina";
 $resultado = mysqli_query($conexion, $sql);
+
 //nombre categoria 
 $sql_categoria = "SELECT categoria FROM categorias WHERE id_categoria = $categoria_id";
 $resultado_categoria = mysqli_query($conexion, $sql_categoria);
@@ -35,7 +52,7 @@ if (!$resultado) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogo de productos</title>
+    <title>Catalogo de productos - <?php echo $nombre_categoria; ?></title>
 </head>
 <body style="background-color: #1B3C53;">
   
@@ -126,6 +143,15 @@ if (!$resultado) {
         </header>
   <section class="productos_cartas">
   <div class="container px-4 px-lg-5 ">
+      <!-- ========== INFORMACIÓN DE PAGINACIÓN ========== -->
+      <?php if ($total_productos > 0): ?>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="text-white">
+              Mostrando <?php echo ($offset + 1); ?> - <?php echo min($offset + $productos_por_pagina, $total_productos); ?> de <?php echo $total_productos; ?> productos
+          </div>
+      </div>
+      <?php endif; ?>
+
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center ">
           <?php if ($resultado && mysqli_num_rows($resultado) > 0): ?>
               <?php while($producto = mysqli_fetch_assoc($resultado)): ?>
@@ -156,7 +182,7 @@ if (!$resultado) {
                           <!-- Product actions-->
                           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                               <div class="text-center">
-                                <a class="btn btn-outline-dark mt-auto" href="producto_log.php?id=<?php echo $producto['id_producto']; ?>">Ver producto</a>
+                                <a class="btn btn-outline-dark mt-auto" href="login_register_user.php">Ver producto</a>
                               </div>
                           </div>
                       </div>
@@ -164,10 +190,75 @@ if (!$resultado) {
               <?php endwhile; ?>
           <?php else: ?>
               <div class="col-12 text-center text-white">
-                  <p>No hay productos disponibles.</p>
+                  <p>No hay productos disponibles en esta categoría.</p>
               </div>
           <?php endif; ?>
       </div>
+
+      <!-- ========== PAGINACIÓN ========== -->
+      <?php if ($total_paginas > 1): ?>
+      <nav aria-label="Paginación de productos" class="mt-5">
+          <ul class="pagination justify-content-center">
+              <!-- Botón Anterior -->
+              <li class="page-item <?php echo $pagina_actual <= 1 ? 'disabled' : ''; ?>">
+                  <a class="page-link" 
+                     href="?categoria=<?php echo $categoria_id; ?>&pagina=<?php echo $pagina_actual - 1; ?>" 
+                     aria-label="Anterior">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+
+              <!-- Números de página -->
+              <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                  <?php 
+                  // Mostrar solo páginas cercanas a la actual para no tener una lista muy larga
+                  $mostrar_pagina = false;
+                  if ($total_paginas <= 10) {
+                      $mostrar_pagina = true;
+                  } else {
+                      // Mostrar primeras 3, últimas 3 y páginas alrededor de la actual
+                      if ($i <= 3 || $i > $total_paginas - 3 || abs($i - $pagina_actual) <= 2) {
+                          $mostrar_pagina = true;
+                      }
+                  }
+                  ?>
+                  
+                  <?php if ($mostrar_pagina): ?>
+                      <?php if ($i == $pagina_actual): ?>
+                          <li class="page-item active">
+                              <span class="page-link"><?php echo $i; ?></span>
+                          </li>
+                      <?php else: ?>
+                          <li class="page-item">
+                              <a class="page-link" 
+                                 href="?categoria=<?php echo $categoria_id; ?>&pagina=<?php echo $i; ?>">
+                                  <?php echo $i; ?>
+                              </a>
+                          </li>
+                      <?php endif; ?>
+                  <?php elseif ($i == 4 && $pagina_actual > 5): ?>
+                      <li class="page-item disabled">
+                          <span class="page-link">...</span>
+                      </li>
+                  <?php elseif ($i == $total_paginas - 3 && $pagina_actual < $total_paginas - 4): ?>
+                      <li class="page-item disabled">
+                          <span class="page-link">...</span>
+                      </li>
+                  <?php endif; ?>
+              <?php endfor; ?>
+
+              <!-- Botón Siguiente -->
+              <li class="page-item <?php echo $pagina_actual >= $total_paginas ? 'disabled' : ''; ?>">
+                  <a class="page-link" 
+                     href="?categoria=<?php echo $categoria_id; ?>&pagina=<?php echo $pagina_actual + 1; ?>" 
+                     aria-label="Siguiente">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          </ul>
+      </nav>
+      <?php endif; ?>
+      <!-- ========== FIN PAGINACIÓN ========== -->
   </div>
 </section>
 <footer class="bg-dark text-white pt-5 pb-4">

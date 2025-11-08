@@ -55,8 +55,8 @@ require_once "view/añadir_trabajadores.php";
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="cedula">Cédula:</label>
-                    <input type="text" id="cedula" name="cedula" class="form-control" placeholder="Cédula">
+                    <label for="cedula">Cédula:</label >
+                    <input type="number" id="cedula" name="cedula" min="0" class="form-control" placeholder="Cédula" >
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@ require_once "view/añadir_trabajadores.php";
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="telefono">Número de teléfono:</label>
-                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Número de teléfono">
+                    <input type="number" id="telefono" name="telefono" min="0" class="form-control" placeholder="Número de teléfono">
                 </div>
             </div>
             <div class="col-md-6">
@@ -117,12 +117,33 @@ require_once "view/añadir_trabajadores.php";
 <script src="controladores/codigo_usuario.js"></script>
 <!-- FIN DEL CONTENIDO PRINCIPAL-->
 <?php require_once "view/parte_inferior.php"?>
-<script>
-  // Esta línea evita que la página protegida se guarde en el historial del navegador
-  window.history.pushState(null, null, location.href);
-  window.onpopstate = function() {
-    window.history.go(1);
-  };
-</script>
+ <script>
+        window.history.pushState(null, null, location.href);
+        window.onpopstate = function() {
+            window.history.go(1);
+        };
+    </script>
+    <script src="offline_service/boostrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="offline_service/fontawesome-free/css/all.min.css">
+</div>
 
+<style>
+    /* Para Chrome, Safari, Edge, Opera */
+#cedula::-webkit-outer-spin-button,
+#cedula::-webkit-inner-spin-button,
+#telefono::-webkit-outer-spin-button,
+#telefono::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
+/* Para Firefox */
+#cedula, #telefono {
+    -moz-appearance: textfield;
+}
+
+/* Para todos los navegadores modernos */
+#cedula, #telefono {
+    appearance: textfield;
+}
+</style>

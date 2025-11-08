@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-10-2025 a las 02:44:18
+-- Tiempo de generación: 08-11-2025 a las 18:05:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -44,10 +44,9 @@ CREATE TABLE `admin_trabajadores` (
 --
 
 INSERT INTO `admin_trabajadores` (`id_trabajador`, `id_rol`, `nombre`, `apellido`, `cedula`, `numero_de_telefono`, `nombre_de_usuario`, `correo_electronico`, `contraseña`) VALUES
-(41, 1, 'Sebastian', 'Ramirez', '12312321', '123123214', 'sebas1234', 'sebas@gmail.com', '$2y$10$I0ZuhzxbQovGOeEOiVl86.b.VnYtvRVtQA604hOkPJaG2SPhbXkC6'),
-(42, 1, 'Reinaldo', 'Polanco', '31035538', '04241583015', 'reipola', 'reinaldopolanco14@gmail.com', '$2y$10$LsxbTUU5d8cQRMfTdK.FT.qwgRfj4fnKEC86knrN0ECuSFLPmPZLe'),
-(43, 2, 'Jose', 'Leite', '8908908', '98977989', 'jose112', 'jose@gmail.com', '$2y$10$SsE/e3xq6rhe/FD.jpvV1ORXgOx2qu4oRPnGvrTb0ED2IFFwhYz7C'),
-(47, 1, 'miguel', 'flores', '30667634', '04149027363', 'legumin', 'mafr737@gmail.com', '$2y$10$CK0f75DiIkAAOJAeYjRSb.1qDoQxnKtPIReSFnpjRUm1m.5cMSdN6');
+(48, 2, 'Reinaldo', 'Polanco', '27463791', '04129837722', 'reipola17', 'reipola@gmail.com', '$2y$10$5OgbEx63kyfUscbj6KR40uGfEY4NahQsGzZblhvxp/vv4TUPl.HgO'),
+(49, 1, 'miguel', 'flores', '30667634', '04149027363', 'legumin', 'mafr737@gmail.com', '$2y$10$QfLfkVxaovhC1LKnciT42ei9QI2sX6wBwK3HBACG.r1fqbDloSHVO'),
+(50, 2, 'miguel', 'a', '31860457', '04149027563', 'usuario', 'maf737@gmail.com', '$2y$10$CbOBRZXk92ijBuecaHyLWuELJnKbbWTear8O/4qILdAJw/WvJAPYK');
 
 -- --------------------------------------------------------
 
@@ -60,14 +59,6 @@ CREATE TABLE `carrito_compras` (
   `id_usuario` int(11) NOT NULL,
   `fecha_creacion` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `carrito_compras`
---
-
-INSERT INTO `carrito_compras` (`id_carrito`, `id_usuario`, `fecha_creacion`) VALUES
-(1, 12, '2025-10-25 '),
-(3, 13, '2025-10-30 ');
 
 -- --------------------------------------------------------
 
@@ -102,15 +93,22 @@ CREATE TABLE `detalles_carrito` (
   `dc_cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `detalles_carrito`
+-- Estructura de tabla para la tabla `detalles_pago`
 --
 
-INSERT INTO `detalles_carrito` (`id_detalle_car`, `id_carrito`, `id_producto`, `dc_cantidad`) VALUES
-(6, 1, 24, 3),
-(7, 1, 16, 1),
-(8, 1, 21, 3),
-(12, 3, 20, 1);
+CREATE TABLE `detalles_pago` (
+  `id_detalle_pago` int(11) NOT NULL,
+  `id_venta` int(11) NOT NULL,
+  `metodo_pago` enum('divisas','bolivares','tarjeta','pago_movil') NOT NULL,
+  `monto_recibido` decimal(10,2) DEFAULT NULL,
+  `vuelto` decimal(10,2) DEFAULT NULL,
+  `banco` varchar(100) DEFAULT NULL,
+  `referencia_pago` varchar(20) DEFAULT NULL,
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -125,14 +123,6 @@ CREATE TABLE `detalles_pedido` (
   `dp_cantidad` int(11) NOT NULL,
   `monto_unico` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `detalles_pedido`
---
-
-INSERT INTO `detalles_pedido` (`id_detallle`, `id_venta`, `id_producto`, `dp_cantidad`, `monto_unico`) VALUES
-(1, 1, 16, 1, 100),
-(2, 1, 21, 5, 990);
 
 -- --------------------------------------------------------
 
@@ -151,11 +141,7 @@ CREATE TABLE `direcciones_usuarios` (
 --
 
 INSERT INTO `direcciones_usuarios` (`id_direccion`, `id_usuario`, `direccion`) VALUES
-(1, 8, 'Los Teques'),
-(2, 9, 'Mondalandia'),
-(4, 11, 'los teques'),
-(5, 12, 'los teques'),
-(6, 13, 'los teques');
+(8, 15, 'los teques');
 
 -- --------------------------------------------------------
 
@@ -166,10 +152,32 @@ INSERT INTO `direcciones_usuarios` (`id_direccion`, `id_usuario`, `direccion`) V
 CREATE TABLE `pagos` (
   `id_pago` int(11) NOT NULL,
   `id_venta` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
   `monto_unico` float NOT NULL,
-  `metodo_pago` enum('tarjeta','efectivo','pago movil','bio pago') NOT NULL,
-  `estado_pago` enum('pendiente','pagado','rechazado','') NOT NULL
+  `metodo_pago` enum('divisas','bolivares','tarjeta','pago_movil') NOT NULL,
+  `estado_pago` enum('pendiente','pagado','rechazado','') NOT NULL,
+  `banco` varchar(100) DEFAULT NULL,
+  `referencia` varchar(20) DEFAULT NULL,
+  `fecha_pago` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`id_pago`, `id_venta`, `id_usuario`, `monto_unico`, `metodo_pago`, `estado_pago`, `banco`, `referencia`, `fecha_pago`) VALUES
+(17, 15, 14, 40, 'divisas', 'pagado', NULL, NULL, '2025-11-02 12:22:40'),
+(18, 16, 14, 40, 'bolivares', 'pagado', NULL, NULL, '2025-11-02 12:22:57'),
+(19, 17, 14, 40, 'tarjeta', 'pagado', 'Banco del Tesoro', NULL, '2025-11-02 12:23:17'),
+(20, 18, 14, 40, 'pago_movil', 'pagado', 'Banco Mercantil', '4590', '2025-11-02 12:23:39'),
+(21, 19, 14, 69, 'pago_movil', 'pagado', 'Banco Nacional de Crédito (BNC)', '8742', '2025-11-02 12:37:44'),
+(22, 20, 14, 69, 'bolivares', 'pagado', NULL, NULL, '2025-11-02 12:38:28'),
+(23, 21, 14, 250, 'divisas', 'pagado', NULL, NULL, '2025-11-02 12:40:56'),
+(24, 22, 15, 12250, 'tarjeta', 'pagado', 'Banco de Venezuela (BDV)', NULL, '2025-11-02 13:49:23'),
+(25, 23, 15, 250, 'tarjeta', 'pagado', 'Banco Venezolano de Crédito (BVC)', NULL, '2025-11-08 10:38:19'),
+(26, 25, 15, 16000, 'tarjeta', 'pagado', 'Banco de Venezuela (BDV)', NULL, '2025-11-08 10:52:47'),
+(27, 26, 15, 4430, 'tarjeta', 'pagado', 'Banco Nacional de Crédito (BNC)', NULL, '2025-11-08 12:15:16'),
+(28, 29, 15, 5440, 'divisas', 'pagado', NULL, NULL, '2025-11-08 13:03:25');
 
 -- --------------------------------------------------------
 
@@ -192,16 +200,43 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `cantidad`, `id_categoria`, `imagen`) VALUES
-(15, 'bulbasur', 'Bulbasaur, conocido como Fushigidane en Japón, es una especie ficticia de Pokémon de la franquicia Pokémon de Nintendo y Game Freak. Presentado por primera vez en los videojuegos Pokémon Rojo y Azul, fue creado por Atsuko Nishida y su diseño finalizado por Ken Sugimori.', 1500, 1, 2, 'img/prod_68f25d6e8f1da.jpeg'),
-(16, 'squirtle', 'Squirtle, conocido como Zenigame en Japón, es una especie de Pokémon de la franquicia Pokémon de Nintendo y Game Freak. Fue diseñado por Atsuko Nishida. Su nombre se cambió de Zenigame a Squirtle durante la localización de la serie al inglés para hacerlo más ingenioso y descriptivo.', 100, 1, 1, 'img/prod_68f25df1dedf6.jpeg'),
-(17, 'charmander', 'Charizard es una de las criaturas de la franquicia Pokémon. Se trata de un pokémon tipo fuego/volador, que aparece por primera vez en Pokémon Red y Blue, donde puede ser obtenido si el jugador elige ...', 777777, 2, 3, 'img/prod_68f25e8c232ed.jpeg'),
-(18, 'gotas para la nariz', 'Indicaciones: 2 a 3 gotas 3 veces al día en cada fosa nasal (cada 8 horas).  Advertencias: si los síntomas persisten y no se observa mejoría después de 2 a 3 días con el uso de este medicamento, suspéndase y consulte al médico. La administración prolongada de este producto puede causar nerviosismo, intranquilidad e insomnio.  ', 550, 10, 2, 'img/prod_68f26d30631cc.jpg'),
-(19, 'Dorixina Flex Lisina ', '+ Ciclobenzaprina 125mg/5mg Megalabs x 20 Comprimidos Ciclobenzaprina 125mg/5mg Megalabs x 20 Comprimidos Tratamiento coadyuvante de patologías que cursan con contractura muscular.', 3500, 5, 2, 'img/prod_68f38438edb86.jpg'),
-(20, 'Champu Farmatodo Reparador Macademia y Aguacate 500Ml', 'Regenera y tonifica el cuero cabelludo', 680, 1, 3, 'img/prod_68f38458116ea.jpg'),
-(21, 'Refresco Pepsi Cola x 1 Lt', 'Refresco sabor a cola negra 1lt', 198, 5, 1, 'img/prod_68f38472cb8b1.jpg'),
-(22, 'Diclofenac Potásico 50 mg Caja x 10 Tabletas', 'Composición: Diclofenac Potasico', 69.3, 5, 2, 'img/prod_68f3856ca3985.jpg'),
-(23, 'Galletas Le Biscuit Mini Piruetas x 150 gr', 'Mini barquillas rellenas de chocolate y avellanas.', 240, 5, 1, 'img/prod_68f38586b2cd9.jpg'),
-(24, 'Samba Fresa x 32 gr', 'Galleta cubierta rellena sabor a fresa', 136.72, 5, 1, 'img/prod_68f385ab03317.png');
+(19, 'Dorixina Flex Lisina ', '+ Ciclobenzaprina 125mg/5mg Megalabs x 20 Comprimidos Ciclobenzaprina 125mg/5mg Megalabs x 20 Comprimidos Tratamiento coadyuvante de patologías que cursan con contractura muscular.', 250, 34, 2, 'img/prod_68f38438edb86.jpg'),
+(28, 'Acetaminofén ', '+ clorfenamina maleato 500mg/4mg X10 tabletas CLORACE', 200, 20, 2, 'img/prod_690f5b58b5a0f.jpg'),
+(29, 'Acetaminofen 650mg', '10 comprimidos genven', 360, 47, 2, 'img/prod_690f5bb826217.jpg'),
+(30, 'Ibuprofeno 400mg', 'x 10tab BRUGESIC ', 550, 30, 2, 'img/prod_690f5bf3bc19e.png'),
+(31, 'Diclofenac Potásico 50 mg', 'Medigen Oftalmi Caja x 10 Tabletas', 100, 8, 2, 'img/prod_690f5c31631f8.jpg'),
+(32, 'Acetaminofén 650 mg Atamel', 'Forte Calox Caja x 10 Tabletas Atamel Forte tratamiento sintomàtico de la fiebre y del dolor de leve intensidad.', 380, 15, 2, 'img/prod_690f5c6448b7a.jpg'),
+(33, 'Gasa Estéril 4x4 Compomedica Sobre x 2 und', 'Gasa estéril 100% algodón. Bordes doblados para evitar el desprendimiento de hilos. Tejido de alta absorción que no deja pelusa ni residuos. Posee una textura suave ideal para la limpieza de heridas.', 70, 10, 2, 'img/prod_690f5cb676b82.jpg'),
+(34, 'Azitromicina 375ml', 'Saver Elmor Polvo Para Suspensión x 200mg', 1585, 8, 2, 'img/prod_690f5d0f87919.jpg'),
+(35, 'Flavoxato Clorhidrato 200 mg', 'Genurin Elmor Caja x 10 Gragea', 1462, 5, 2, 'img/prod_690f5d39d577e.png'),
+(36, 'Albicar Albendazol 200Mg', 'Elmor Caja x 2 Tabletas', 300, 5, 2, 'img/prod_690f5d8e4d0b9.png'),
+(37, 'Refresco Coca-Cola Sabor Original 2 Lt', 'Bebida gaseosa con sabor a cola negra en presentación de 2 L. Ideal para compartir y acompañar tus comidas, celebrar la vida y abrazar la magia de cada momento.', 300, 145, 1, 'img/prod_690f5dc8c8521.jpg'),
+(38, 'Refresco Frescolita 2 Lt', 'Bebida gaseosa con sabor a colita en presentación de 2 L. Ideal para refrescar y compartir tus comidas y momentos especiales con su perfecto balance de burbujas, color único, sabor inconfundible y aroma original.', 380, 123, 1, 'img/prod_690f5e128ae43.png'),
+(39, 'Refresco Fanta Toronja 2 Lt', 'refresco', 450, 33, 1, 'img/prod_690f5ea2584cd.jpg'),
+(40, 'Refresco Fanta Toronja Lata x 355 ml', 'Descubre el burbujeante sabor de Fanta Toronja en presentación Lata 355 ml y haz tus snacks más divertidos.', 200, 234, 1, 'img/prod_690f5efdb9e6b.jpg'),
+(41, 'Schweppes Aguakina Lata 355 ml', 'Bebida gaseosa sin alcohol aromatizada con quinina, en presentación de lata 355 ML. Ideal para combinar con tus bebidas favoritas y realzar su sabor dándole mayor efervescencia y sofisticación. Mezclador por excelencia y acompañante perfecto para tu vida social. Disponible para bebedores exigentes y magistrales cocteleras.', 450, 213, 1, 'img/prod_690f5f2e00d17.jpg'),
+(42, 'Bebida energética ', 'Monster Clásico Lata 473 ml', 740, 33, 1, 'img/prod_690f5f6752b10.png'),
+(43, 'Bebida Energética', 'Monster Mango Loco Lata 473 ml', 715, 12, 1, 'img/prod_690f5f8dd2be9.png'),
+(44, 'Galletas Soda Puig 240Gr', 'Galletas crujientes y tostaditas.', 400, 123, 1, 'img/prod_690f6148ce10c.jpg'),
+(45, 'Galleta de Chocolate Samba Savoy Fresa x 32 gr', 'Galleta cubierta rellena sabor a fresa', 100, 22, 1, 'img/prod_690f61835d645.png'),
+(46, 'Galletas Oreo Navidad Americano Tubo x 96 gr', 'Galletas de chocolate con vainilla en el centro version navidad', 120, 213, 1, 'img/prod_690f61aba3c12.png'),
+(47, 'Snack Cheese Tris x 150 gr', 'Producto de Frito Lay, presentación 150 gr. Cereal de maíz inflado con queso', 212, 123, 1, 'img/prod_690f61ddbd5c1.png'),
+(48, 'Snack Pepito 80Gr', 'Cereal de maíz inflado con sabor a queso', 300, 122, 1, 'img/prod_690f61fcd2476.jpg'),
+(49, 'Chocolate St Moritz Flaquito Nevado 30Gr', 'Galleta crocante de vainilla', 122, 22, 1, 'img/prod_690f62288c8de.jpg'),
+(50, 'Chocolate Savoy Con Leche x 30 gr', 'Chocolate con leche.', 100, 122, 1, 'img/prod_690f6246504fa.png'),
+(51, 'Caramelos Freegells Extra Fuerte 31.7Gr', 'Libérate del aburrimiento y sumérgete en la frescura de los Caramelos Freegells. ¡Tu paladar te lo agradecerá!', 50, 222, 1, 'img/prod_690f62605b0a0.jpg'),
+(52, 'Snack Doritos Mega Queso x 45 gr', 'Hojuelas de maíz tostadas con sabor a queso', 220, 122, 1, 'img/prod_690f627bbfba4.jpg'),
+(53, 'Crema Dental Colgate Triple Accion 75Ml', 'Obtén triple beneficio: Protección, Blancura, y Frescura, con tu crema dental Colgate Triple Acción.', 500, 122, 3, 'img/prod_690f644140e29.jpg'),
+(54, 'Toallas Desmaquillantes Farmatodo x 25 und', 'Toallas desmaquillantes Farmatodo para todo tipo de piel. Una manera cómoda y rápida de obtener una limpieza facial completa.', 250, 50, 3, 'img/prod_690f646a93cbd.png'),
+(55, 'Exfoliante Corporal BACC Coco Regenerador Y Suavizante x 200 ml', 'El Exfoliante Bath Salt de Coco elimina las células muertas de la piel dejándola suave e iluminada, prepara tu piel para la depilación y permite que la epidermis quede limpia y tonificada para el bronceado.', 1000, 120, 3, 'img/prod_690f64b485147.jpg'),
+(56, 'Máquina Afeitar Dorco 2Hoj X5Unid Hombre Desechable', 'Afeitadora', 340, 96, 3, 'img/prod_690f64dfc7471.jpg'),
+(57, 'Desodorante Dioxogen Hipoalergénico ', 'Desodorante Antitraspirante Hipoalergénico con Bicarbonato Neutralizador de Olores. Dermatológicamente Probado. Libre de Alcohol. 48 Horas de Protección. Roll-On Bicarbonato x 90 gr', 650, 12, 3, 'img/prod_690f6519e9ea9.png'),
+(58, 'Desodorante Rollon Every Night Bio Baby Pink 90 Gr', 'Desodorante Roll on Bionutriente con Aloe Vera y Vitamina E Baby Pink', 500, 122, 3, 'img/prod_690f653f8dfd0.jpg'),
+(59, 'Jabón En Barra Protex Avena x 110 gr', 'Jabón Protex Avena elimina 99.9% de las bacterias naturalmente.', 300, 122, 3, 'img/prod_690f657f94edd.jpg'),
+(60, 'Jabón En Barra Rexona Limpieza Profunda x 120 gr', 'Jabón en barra antibacterial', 122, 22, 3, 'img/prod_690f659d0b941.jpg'),
+(61, 'Champu Anticaspa Farmatodo Frescura x 200 ml', 'shampoo', 550, 122, 3, 'img/prod_690f65ba2c287.jpg'),
+(62, 'Champu Drene Proh Complex Cabello Seco Maltratado 370Ml', 'Drene con ProH Complex te ayuda a tener el cabello que deseas con ingredientes ideales Keratina, Vitamina E y Pantenol.', 1200, 122, 3, 'img/prod_690f65d284aaa.jpg'),
+(63, 'Champu Pantene Restauración 200Ml', 'Pantene con su fórmula multivitaminas nutre tu cabello desde la raíz para que crezca largo y fuerte hasta las puntas.', 1500, 212, 3, 'img/prod_690f65ec30ed1.jpg');
 
 -- --------------------------------------------------------
 
@@ -239,11 +274,7 @@ CREATE TABLE `telefonos_usuarios` (
 --
 
 INSERT INTO `telefonos_usuarios` (`id_telefono`, `id_usuario`, `numero_tlf`) VALUES
-(4, 8, 2147483647),
-(5, 9, 2147483647),
-(7, 11, 2147483647),
-(8, 12, 2147483647),
-(9, 13, 2147483647);
+(11, 15, 2147483647);
 
 -- --------------------------------------------------------
 
@@ -263,11 +294,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `correo`, `contraseña_hash`) VALUES
-(8, 'Reinaldo ', 'reinaldopolanco14@gmail.com', '123'),
-(9, 'mondamonda', 'monda@gmail.com', '123'),
-(11, 'Barbara Antoima', 'm@gmail.com', '$2y$10$tiLPUFqYusZKHnJ6EF034.4eCtoBbzlrmPmx/uvC0OFBOF..qAW6a'),
-(12, 'Main Shaco', 'shaco@gmail.com', '$2y$10$SagoFjUykq/fw2kutW0bduFong5UWPlGHNEpqFk6Vp0dhqSB0yW76'),
-(13, 'miguel', 'mafr737@gmail.com', '$2y$10$0f1c.SQXmktCvrf8HrlluOBQDoKtSxk4rEAUx/rb63Ci5V/bAqqBu');
+(14, 'Reinaldo ', 'reinaldopolanco14@gmail.com', '$2y$10$h18zIEA8HmRAJM3nJ5JTM.8TtDzP/dpB3zUIt.t0/eeGj6bgyDBbq'),
+(15, 'Barbara Antoima', 'mafr737@gmail.com', '$2y$10$qh39hRM22rVLA9vWC6cyQujs3/Ab5jmIhywqhIcc2EoaKe9P3LAo.');
 
 -- --------------------------------------------------------
 
@@ -280,17 +308,8 @@ CREATE TABLE `ventas` (
   `id_usuario` int(11) NOT NULL,
   `codigo_unico` varchar(20) DEFAULT NULL,
   `estado` enum('apartado','pagado','finalizado','cancelado') DEFAULT 'apartado',
-  `metodo_pago` varchar(50) DEFAULT NULL,
-  `fecha_apartado` datetime DEFAULT NULL,
-  `fecha_pagado` datetime DEFAULT NULL
+  `fecha_apartado` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `ventas`
---
-
-INSERT INTO `ventas` (`id_venta`, `id_usuario`, `codigo_unico`, `estado`, `metodo_pago`, `fecha_apartado`, `fecha_pagado`) VALUES
-(1, 13, 'ygRcGd2p1N', 'apartado', NULL, '2025-10-30 20:47:54', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -326,6 +345,13 @@ ALTER TABLE `detalles_carrito`
   ADD KEY `id_producto` (`id_producto`);
 
 --
+-- Indices de la tabla `detalles_pago`
+--
+ALTER TABLE `detalles_pago`
+  ADD PRIMARY KEY (`id_detalle_pago`),
+  ADD KEY `id_venta` (`id_venta`);
+
+--
 -- Indices de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
@@ -345,7 +371,8 @@ ALTER TABLE `direcciones_usuarios`
 --
 ALTER TABLE `pagos`
   ADD PRIMARY KEY (`id_pago`),
-  ADD KEY `id_venta` (`id_venta`);
+  ADD KEY `id_venta` (`id_venta`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `productos`
@@ -390,13 +417,13 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `admin_trabajadores`
 --
 ALTER TABLE `admin_trabajadores`
-  MODIFY `id_trabajador` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id_trabajador` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `carrito_compras`
 --
 ALTER TABLE `carrito_compras`
-  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -408,49 +435,55 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `detalles_carrito`
 --
 ALTER TABLE `detalles_carrito`
-  MODIFY `id_detalle_car` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_detalle_car` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
+--
+-- AUTO_INCREMENT de la tabla `detalles_pago`
+--
+ALTER TABLE `detalles_pago`
+  MODIFY `id_detalle_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
-  MODIFY `id_detallle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_detallle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `direcciones_usuarios`
 --
 ALTER TABLE `direcciones_usuarios`
-  MODIFY `id_direccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_direccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `telefonos_usuarios`
 --
 ALTER TABLE `telefonos_usuarios`
-  MODIFY `id_telefono` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_telefono` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Restricciones para tablas volcadas
@@ -476,6 +509,12 @@ ALTER TABLE `detalles_carrito`
   ADD CONSTRAINT `detalles_carrito_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
 
 --
+-- Filtros para la tabla `detalles_pago`
+--
+ALTER TABLE `detalles_pago`
+  ADD CONSTRAINT `detalles_pago_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
+
+--
 -- Filtros para la tabla `detalles_pedido`
 --
 ALTER TABLE `detalles_pedido`
@@ -492,7 +531,7 @@ ALTER TABLE `direcciones_usuarios`
 -- Filtros para la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
+  ADD CONSTRAINT `pagos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --
 -- Filtros para la tabla `productos`

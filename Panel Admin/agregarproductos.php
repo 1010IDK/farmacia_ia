@@ -55,7 +55,7 @@ require_once "view/añadir_productos.php";
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="precio">Precio:</label>
-                    <input type="text" id="precio" name="precio" class="form-control" placeholder="Precio del producto">
+                    <input type="number" id="precio" name="precio" min="0" class="form-control" placeholder="Precio del producto">
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@ require_once "view/añadir_productos.php";
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" class="form-control" placeholder="Cantidad del producto">
+                    <input type="number" id="cantidad" name="cantidad" min="0" class="form-control" placeholder="Cantidad del producto">
                 </div>
             </div>
             <div class="col-md-6">
@@ -99,3 +99,12 @@ require_once "view/añadir_productos.php";
 <script src="controladores/codigo_registro_producto.js"></script>
 <!-- FIN DEL CONTENIDO PRINCIPAL-->
 <?php require_once "view/parte_inferior.php"?>
+ <script>
+        window.history.pushState(null, null, location.href);
+        window.onpopstate = function() {
+            window.history.go(1);
+        };
+    </script>
+    <script src="offline_service/boostrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="offline_service/fontawesome-free/css/all.min.css">
+</div>

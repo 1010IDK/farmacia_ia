@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="../../../Farmacia/logins/Plugins/sweetalert2/sweetalert2.min.css">
 
   </head>
+<link rel="apple-touch-icon" sizes="180x180" href="../Panel Admin/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../Panel Admin/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../Panel Admin/favicon/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
   <body>
     <!-- Contenedor principal -->
     <div class="container">
@@ -56,9 +60,7 @@
                     <input type="password" name="password" id="password"/>
                      
               </div>
-              <div class="forgot-password">
-                  <a href="#">¿Olvidaste tu contraseña?</a>
-              </div>
+              
               <button type="submit" name="submit">Iniciar Sesión</button>
 </form>
             </div>

@@ -76,6 +76,46 @@ if ($result_carrito->num_rows === 0) {
     exit;
 }
 
+// ========== NUEVO: VERIFICAR STOCK ANTES DE PROCESAR ==========
+$sql_verificar_stock = "SELECT 
+    p.nombre,
+    p.cantidad as stock_actual,
+    dc.dc_cantidad as cantidad_solicitada
+FROM detalles_carrito dc
+JOIN carrito_compras cc ON dc.id_carrito = cc.id_carrito
+JOIN productos p ON dc.id_producto = p.id_producto
+WHERE cc.id_usuario = ? AND dc.dc_cantidad > p.cantidad";
+
+$stmt_verificar_stock = $conexion->prepare($sql_verificar_stock);
+if (!$stmt_verificar_stock) {
+    echo json_encode(['success' => false, 'message' => 'Prepare failed for verificar_stock: ' . $conexion->error]);
+    exit;
+}
+if (!$stmt_verificar_stock->bind_param("i", $id_usuario)) {
+    echo json_encode(['success' => false, 'message' => 'Bind failed for verificar_stock: ' . $stmt_verificar_stock->error]);
+    exit;
+}
+if (!$stmt_verificar_stock->execute()) {
+    echo json_encode(['success' => false, 'message' => 'Execute failed for verificar_stock: ' . $stmt_verificar_stock->error]);
+    exit;
+}
+$result_verificar_stock = $stmt_verificar_stock->get_result();
+
+$productos_sin_stock = [];
+while ($producto = $result_verificar_stock->fetch_assoc()) {
+    $productos_sin_stock[] = $producto;
+}
+
+if (count($productos_sin_stock) > 0) {
+    $mensaje_error = "Stock insuficiente para los siguientes productos:\n";
+    foreach ($productos_sin_stock as $producto) {
+        $mensaje_error .= "- {$producto['nombre']}: Solicitado {$producto['cantidad_solicitada']}, Disponible {$producto['stock_actual']}\n";
+    }
+    echo json_encode(['success' => false, 'message' => $mensaje_error]);
+    exit;
+}
+// ========== FIN VERIFICACIÓN DE STOCK ==========
+
 // Generar código único (10 caracteres alfanuméricos)
 function generarCodigoUnico($conexion) {
     do {
@@ -143,6 +183,29 @@ try {
             throw new Exception('Execute failed for detalle: ' . $stmt_detalle->error);
         }
     }
+
+    // ========== NUEVO: ACTUALIZAR STOCK DE PRODUCTOS ==========
+    // Re-ejecutar la query del carrito para actualizar stock
+    if (!$stmt_carrito->execute()) {
+        throw new Exception('Re-execute failed for carrito (stock): ' . $stmt_carrito->error);
+    }
+    $result_carrito_stock = $stmt_carrito->get_result();
+
+    // Actualizar stock de productos
+    while ($item = $result_carrito_stock->fetch_assoc()) {
+        $sql_actualizar_stock = "UPDATE productos SET cantidad = cantidad - ? WHERE id_producto = ?";
+        $stmt_actualizar_stock = $conexion->prepare($sql_actualizar_stock);
+        if (!$stmt_actualizar_stock) {
+            throw new Exception('Prepare failed for actualizar_stock: ' . $conexion->error);
+        }
+        if (!$stmt_actualizar_stock->bind_param("ii", $item['dc_cantidad'], $item['id_producto'])) {
+            throw new Exception('Bind failed for actualizar_stock: ' . $stmt_actualizar_stock->error);
+        }
+        if (!$stmt_actualizar_stock->execute()) {
+            throw new Exception('Execute failed for actualizar_stock: ' . $stmt_actualizar_stock->error);
+        }
+    }
+    // ========== FIN ACTUALIZACIÓN DE STOCK ==========
 
     // Obtener id_carrito
     $sql_id_carrito = "SELECT id_carrito FROM carrito_compras WHERE id_usuario = ?";
@@ -232,7 +295,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Pedido apartado exitosamente',
+        'message' => 'Pedido apartado exitosamente. Stock actualizado.',
         'codigo' => $codigo_unico,
         'email_enviado' => $email_enviado
     ]);
@@ -243,3 +306,4 @@ try {
     echo json_encode(['success' => false, 'message' => 'Error al procesar el apartado: ' . $e->getMessage()]);
     exit;
 }
+?>
