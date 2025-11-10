@@ -141,8 +141,6 @@ $total = $subtotal + $envio + $impuestos;
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="informacion_user.php">Informacion personal</a></li>
-                            <li><a class="dropdown-item" href="#">Configuracion</a></li>
-                            <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item logout" href="../controladores/logout.php">Cerrar sesion</a></li>

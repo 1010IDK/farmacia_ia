@@ -137,8 +137,6 @@ $resultados_pagina_actual = mysqli_num_rows($resultado_productos);
                   </button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="informacion_user.php">Informacion personal</a></li>
-                    <li><a class="dropdown-item" href="#">Configuracion</a></li>
-                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item logout" href="../controladores/logout.php">Cerrar sesion</a></li>
                   </ul>
                 </div>
